@@ -36,7 +36,7 @@
 
 // CPlayerToolBar
 /*
-Each toolbar image contains 4 rows of 26 buttons.
+Each toolbar image contains 4 rows of 27 buttons.
 Row 1: buttons for light theme, enabled/active state
 Row 2: buttons for light theme, disabled/inactive state
 Row 3: buttons for dark theme, enabled/active state
@@ -69,6 +69,7 @@ Generic button 3
 Generic button 4
 Sound enabled(active state) + Sound enabled(low volume) (inactive state)
 Sound muted(active state) + Sound unavailable(inactive state)
+Color controls
 */
 
 #define VOLUMEBUTTON_SVG_INDEX 24
@@ -100,6 +101,7 @@ std::map<WORD, CPlayerToolBar::svgButtonInfo> CPlayerToolBar::supportedSvgButton
     {ID_CUSTOM_ACTION2, {TBBS_BUTTON, 21, IDS_CUSTOM_ACTION2}},
     {ID_CUSTOM_ACTION3, {TBBS_BUTTON, 22, IDS_CUSTOM_ACTION3}},
     {ID_CUSTOM_ACTION4, {TBBS_BUTTON, 23, IDS_CUSTOM_ACTION4}},
+    {ID_COLOR_CONTROLS, {TBBS_BUTTON, 26}},
     {ID_DUMMYSEPARATOR, {TBBS_SEPARATOR, -1, 0, LOCK_RIGHT}},
     {ID_VOLUME_MUTE, {TBBS_CHECKBOX, VOLUMEBUTTON_SVG_INDEX, 0, LOCK_RIGHT}},
 };

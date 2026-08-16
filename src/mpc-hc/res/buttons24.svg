@@ -2,8 +2,8 @@
 <!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1"
 	 id="svg3341" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 624 96"
-	 style="enable-background:new 0 0 624 96;" xml:space="preserve">
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 648 96"
+	 style="enable-background:new 0 0 648 96;" xml:space="preserve">
 <sodipodi:namedview  bordercolor="#666666" borderopacity="1.0" id="base" inkscape:current-layer="layer1" inkscape:cx="144.97634" inkscape:cy="-0.056865311" inkscape:document-units="px" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:snap-grids="true" inkscape:window-height="966" inkscape:window-maximized="1" inkscape:window-width="1680" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="2.0875" pagecolor="#ffffff" showgrid="true" units="px">
 	<inkscape:grid  id="grid3353" type="xygrid"></inkscape:grid>
 </sodipodi:namedview>
@@ -478,4 +478,43 @@
 <rect id="rect4165_13_" x="150" y="87" style="fill:#646464;" width="1.5" height="1.5"/>
 <rect id="rect4165_12_" x="153" y="87" style="fill:#646464;" width="3" height="1.5"/>
 <rect id="rect4165_2_" x="157.5" y="87" style="fill:#646464;" width="3" height="1.5"/>
+
+<!-- Color controls (svg index 26) -->
+<path d="M636,9A3,3 0 1,1 636,15A3,3 0 1,1 636,9Z"/>
+<rect x="635" y="3" width="2" height="4.5"/>
+<rect x="635" y="16.5" width="2" height="4.5"/>
+<rect x="627" y="11" width="4.5" height="2"/>
+<rect x="640.5" y="11" width="4.5" height="2"/>
+<polygon points="638.76,16.17 641.94,19.35 643.35,17.94 640.17,14.76"/>
+<polygon points="631.83,14.76 628.65,17.94 630.06,19.35 633.24,16.17"/>
+<polygon points="633.24,7.83 630.06,4.65 628.65,6.06 631.83,9.24"/>
+<polygon points="640.17,9.24 643.35,6.06 641.94,4.65 638.76,7.83"/>
+<path d="M636,33A3,3 0 1,1 636,39A3,3 0 1,1 636,33Z" style="fill:#7F7F7F;"/>
+<rect x="635" y="27" width="2" height="4.5" style="fill:#7F7F7F;"/>
+<rect x="635" y="40.5" width="2" height="4.5" style="fill:#7F7F7F;"/>
+<rect x="627" y="35" width="4.5" height="2" style="fill:#7F7F7F;"/>
+<rect x="640.5" y="35" width="4.5" height="2" style="fill:#7F7F7F;"/>
+<polygon points="638.76,40.17 641.94,43.35 643.35,41.94 640.17,38.76" style="fill:#7F7F7F;"/>
+<polygon points="631.83,38.76 628.65,41.94 630.06,43.35 633.24,40.17" style="fill:#7F7F7F;"/>
+<polygon points="633.24,31.83 630.06,28.65 628.65,30.06 631.83,33.24" style="fill:#7F7F7F;"/>
+<polygon points="640.17,33.24 643.35,30.06 641.94,28.65 638.76,31.83" style="fill:#7F7F7F;"/>
+<path d="M636,57A3,3 0 1,1 636,63A3,3 0 1,1 636,57Z" style="fill:#C8C8C8;"/>
+<rect x="635" y="51" width="2" height="4.5" style="fill:#C8C8C8;"/>
+<rect x="635" y="64.5" width="2" height="4.5" style="fill:#C8C8C8;"/>
+<rect x="627" y="59" width="4.5" height="2" style="fill:#C8C8C8;"/>
+<rect x="640.5" y="59" width="4.5" height="2" style="fill:#C8C8C8;"/>
+<polygon points="638.76,64.17 641.94,67.35 643.35,65.94 640.17,62.76" style="fill:#C8C8C8;"/>
+<polygon points="631.83,62.76 628.65,65.94 630.06,67.35 633.24,64.17" style="fill:#C8C8C8;"/>
+<polygon points="633.24,55.83 630.06,52.65 628.65,54.06 631.83,57.24" style="fill:#C8C8C8;"/>
+<polygon points="640.17,57.24 643.35,54.06 641.94,52.65 638.76,55.83" style="fill:#C8C8C8;"/>
+<path d="M636,81A3,3 0 1,1 636,87A3,3 0 1,1 636,81Z" style="fill:#646464;"/>
+<rect x="635" y="75" width="2" height="4.5" style="fill:#646464;"/>
+<rect x="635" y="88.5" width="2" height="4.5" style="fill:#646464;"/>
+<rect x="627" y="83" width="4.5" height="2" style="fill:#646464;"/>
+<rect x="640.5" y="83" width="4.5" height="2" style="fill:#646464;"/>
+<polygon points="638.76,88.17 641.94,91.35 643.35,89.94 640.17,86.76" style="fill:#646464;"/>
+<polygon points="631.83,86.76 628.65,89.94 630.06,91.35 633.24,88.17" style="fill:#646464;"/>
+<polygon points="633.24,79.83 630.06,76.65 628.65,78.06 631.83,81.24" style="fill:#646464;"/>
+<polygon points="640.17,81.24 643.35,78.06 641.94,76.65 638.76,79.83" style="fill:#646464;"/>
+
 </svg>
