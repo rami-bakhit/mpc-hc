@@ -786,6 +786,7 @@ public:
     void ToggleFullscreen(bool fToNearest, bool fSwitchScreenResWhenHasTo);
     void ToggleD3DFullscreen(bool fSwitchScreenResWhenHasTo);
     void MoveVideoWindow(bool fShowStats = false, bool bSetStoppedVideoRect = false);
+    void PanVideoByPixels(int dx, int dy);
     void SetPreviewVideoPosition();
 
     void RepaintVideo(const bool bForceRepaint = false);
@@ -1478,6 +1479,8 @@ protected:
     bool m_bAllowWindowZoom;
     double m_dLastVideoScaleFactor;
     CSize m_lastVideoSize;
+    CRect m_lastVideoWindowRect;
+    CRect m_lastVideoRect;
 
     bool m_bExtOnTop; // 'true' if the "on top" flag was set by an external tool
 

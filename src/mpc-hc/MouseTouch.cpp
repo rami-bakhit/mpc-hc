@@ -123,6 +123,7 @@ void CMouse::ResetToBlankState()
     m_bLeftDown = false;
     m_bTrackingMouseLeave = false;
     m_drag = Drag::NO_DRAG;
+    m_bPanningVideo = false;
     m_cursor = Cursor::ARROW;
     m_switchingToFullscreen.first = false;
     if (m_bLeftUpDelayed) {
@@ -401,6 +402,11 @@ void CMouse::InternalOnLButtonDown(UINT nFlags, const CPoint& point)
         GetWnd().SetCapture();
         m_beginDragPoint = point;
         GetWnd().ClientToScreen(&m_beginDragPoint);
+    } else if (bIsOnFS && m_bLeftDown) {
+        // in fullscreen the same gesture pans the video instead of moving the window
+        GetWnd().SetCapture();
+        m_panPoint = point;
+        m_bPanningVideo = false;
     }
 }
 
@@ -448,6 +454,7 @@ void CMouse::InternalOnLButtonUp(UINT nFlags, const CPoint& point)
     }
 
     m_drag = Drag::NO_DRAG;
+    m_bPanningVideo = false;
     m_bLeftDown = false;
     SetCursor(nFlags, point);
 }
@@ -642,6 +649,40 @@ bool CMouse::TestDrag(const CPoint& screenPoint)
     return ret;
 }
 
+bool CMouse::TestPanVideo(UINT nFlags, const CPoint& clientPoint)
+{
+    if (!(nFlags & MK_LBUTTON)) {
+        // the mouse capture can be lost without a button up message
+        m_bPanningVideo = false;
+        return false;
+    }
+    if (!AfxGetAppSettings().bMouseDragPanVideo) {
+        return false;
+    }
+    if (!m_bLeftDown && !m_bPanningVideo) {
+        return false;
+    }
+    if (!IsOnFullscreenWindow() || m_pMainFrame->GetLoadState() != MLS::LOADED ||
+            m_pMainFrame->m_fAudioOnly) {
+        return false;
+    }
+
+    if (!m_bPanningVideo) {
+        const CPoint diff = clientPoint - m_panPoint;
+        if (abs(diff.x) < GetSystemMetrics(SM_CXDRAG) && abs(diff.y) < GetSystemMetrics(SM_CYDRAG)) {
+            return false;
+        }
+        m_bPanningVideo = true;
+        m_bLeftDown = false; // the button release must not trigger the assigned click command
+    }
+
+    const CPoint delta = clientPoint - m_panPoint;
+    m_panPoint = clientPoint;
+    m_pMainFrame->PanVideoByPixels(delta.x, delta.y);
+
+    return true;
+}
+
 BOOL CMouse::InternalOnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
     return nHitTest == HTCLIENT;
@@ -652,7 +693,7 @@ void CMouse::InternalOnMouseMove(UINT nFlags, const CPoint& point)
     CPoint screenPoint(point);
     GetWnd().ClientToScreen(&screenPoint);
 
-    if (!TestDrag(screenPoint) && !m_pMainFrame->IsInteractiveVideo()) {
+    if (!TestPanVideo(nFlags, point) && !TestDrag(screenPoint) && !m_pMainFrame->IsInteractiveVideo()) {
         if (!m_bTrackingMouseLeave) {
             StartMouseLeaveTracker();
         }
