@@ -9445,7 +9445,7 @@ void CMainFrame::OnViewPanNScan(UINT nID)
     MoveVideoWindow(true);
 }
 
-void CMainFrame::PanVideoByPixels(int dx, int dy)
+void CMainFrame::PanVideoByPixels(int dy)
 {
     if (GetLoadState() != MLS::LOADED || m_fAudioOnly ||
             AfxGetAppSettings().iDSVideoRendererType == VIDRNDT_DS_EVR ||
@@ -9454,25 +9454,17 @@ void CMainFrame::PanVideoByPixels(int dx, int dy)
     }
 
     // Inverse of the mapping done in MoveVideoWindow(): moving the video rect
-    // by n pixels means changing m_PosX/m_PosY by n divided by the range below.
-    const double dWindowW = m_lastVideoWindowRect.Width();
+    // by n pixels means changing m_PosY by n divided by the range below.
     const double dWindowH = m_lastVideoWindowRect.Height();
-    const double dVideoW = m_lastVideoRect.Width();
     const double dVideoH = m_lastVideoRect.Height();
 
-    const double dRangeX = (dVideoW <= 2.5 * dWindowW) ? (3.0 * dWindowW - dVideoW)
-                                                       : ((dVideoW - dWindowW) / 2.0);
     const double dRangeY = (dVideoH <= 2.5 * dWindowH) ? (3.0 * dWindowH - dVideoH)
                                                        : ((dVideoH - dWindowH) / 2.0);
 
-    if (dRangeX > 0.0) {
-        m_PosX = std::min(std::max(m_PosX + dx / dRangeX, -0.5), 1.5);
-    }
     if (dRangeY > 0.0) {
         m_PosY = std::min(std::max(m_PosY + dy / dRangeY, -0.5), 1.5);
+        MoveVideoWindow();
     }
-
-    MoveVideoWindow();
 }
 
 void CMainFrame::OnUpdateViewPanNScan(CCmdUI* pCmdUI)

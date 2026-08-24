@@ -669,7 +669,7 @@ bool CMouse::TestPanVideo(UINT nFlags, const CPoint& clientPoint)
 
     if (!m_bPanningVideo) {
         const CPoint diff = clientPoint - m_panPoint;
-        if (abs(diff.x) < GetSystemMetrics(SM_CXDRAG) && abs(diff.y) < GetSystemMetrics(SM_CYDRAG)) {
+        if (abs(diff.y) < GetSystemMetrics(SM_CYDRAG)) {
             return false;
         }
         m_bPanningVideo = true;
@@ -678,7 +678,7 @@ bool CMouse::TestPanVideo(UINT nFlags, const CPoint& clientPoint)
 
     const CPoint delta = clientPoint - m_panPoint;
     m_panPoint = clientPoint;
-    m_pMainFrame->PanVideoByPixels(delta.x, delta.y);
+    m_pMainFrame->PanVideoByPixels(delta.y);
 
     return true;
 }
