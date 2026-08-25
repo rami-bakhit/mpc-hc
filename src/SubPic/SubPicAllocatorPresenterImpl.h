@@ -34,6 +34,7 @@ class CSubPicAllocatorPresenterImpl
     , public CCritSec
 	, public ISubPicAllocatorPresenter3
     , public ISubRenderConsumer2
+    , public ISubPicRectProvider
 {
 private:
     CCritSec m_csSubPicProvider;
@@ -46,6 +47,7 @@ protected:
     CSize m_curSubtitleTextureSize;
     CSize m_nativeVideoSize, m_aspectRatio;
     CRect m_videoRect, m_windowRect;
+    CRect m_lastSubPicRect;
 	bool  m_bOtherTransform = false;
 
 	REFERENCE_TIME m_rtNow = 0;
@@ -108,6 +110,10 @@ public:
     STDMETHODIMP_(bool) DisplayChange() { return false; }
     STDMETHODIMP_(void) GetPosition(RECT* windowRect, RECT* videoRect) { *windowRect = m_windowRect; *videoRect = m_videoRect; }
     STDMETHODIMP_(void) SetVideoMediaType(CMediaType input) { m_inputMediaType = input; }
+
+    // ISubPicRectProvider
+
+    STDMETHODIMP_(bool) GetSubPicRect(RECT* pSubPicRect);
 
     // ISubPicAllocatorPresenter2
 

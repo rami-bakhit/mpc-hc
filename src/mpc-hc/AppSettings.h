@@ -896,6 +896,7 @@ public:
     int             nTimeOnSeekBar;
     bool            bTimeOnSeekBarLeft;
     bool            bMouseDragPanVideo;
+    bool            bMouseDragSubtitles;
     CString         strOSDFont;
     int             nOSDSize;
     bool            bHideWindowedMousePointer;

@@ -137,6 +137,7 @@
 #define IDS_RS_TIME_ON_SEEKBAR              _T("TimeOnSeekBar")
 #define IDS_RS_TIME_ON_SEEKBAR_LEFT         _T("TimeOnSeekBarLeft")
 #define IDS_RS_MOUSE_DRAG_PAN_VIDEO         _T("MouseDragPanVideo")
+#define IDS_RS_MOUSE_DRAG_SUBTITLES         _T("MouseDragSubtitles")
 #define IDS_RS_CUSTOM_PRESET_CONTROLSTATE   _T("CustomPresetControlState")
 #define IDS_RS_CUSTOM_PRESET_CAPTION        _T("CustomPresetCaption")
 #define IDS_RS_STARTUP_PRESET               _T("StartupPreset")

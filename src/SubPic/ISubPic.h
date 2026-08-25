@@ -243,6 +243,19 @@ public ISubPicAllocatorPresenter2 {
 };
 
 //
+// ISubPicRectProvider
+//
+
+interface __declspec(uuid("7B9E3C64-2A5F-4D71-9C3E-1F6A8D2B4E05"))
+ISubPicRectProvider :
+public IUnknown {
+    // Rectangle the subtitles were last drawn in, in the coordinate space of
+    // the window rectangle passed to ISubPicAllocatorPresenter::SetPosition().
+    // Returns false when no subtitles are being displayed.
+    STDMETHOD_(bool, GetSubPicRect)(RECT* pSubPicRect) PURE;
+};
+
+//
 // ISubStream
 //
 

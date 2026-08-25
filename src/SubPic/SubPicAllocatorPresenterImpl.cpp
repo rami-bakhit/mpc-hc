@@ -48,6 +48,7 @@ CSubPicAllocatorPresenterImpl::CSubPicAllocatorPresenterImpl(HWND hWnd, HRESULT&
     , m_aspectRatio(0, 0)
     , m_videoRect(0, 0, 0, 0)
     , m_windowRect(0, 0, 0, 0)
+    , m_lastSubPicRect(0, 0, 0, 0)
     , m_rtNow(0)
     , m_fps(25.0)
     , m_refreshRate(0)
@@ -81,6 +82,7 @@ STDMETHODIMP CSubPicAllocatorPresenterImpl::NonDelegatingQueryInterface(REFIID r
         QI(ISubRenderOptions)
         QI(ISubRenderConsumer)
         QI(ISubRenderConsumer2)
+        QI(ISubPicRectProvider)
         __super::NonDelegatingQueryInterface(riid, ppv);
 }
 
@@ -117,11 +119,28 @@ HRESULT CSubPicAllocatorPresenterImpl::AlphaBltSubPic(const CRect& windowRect,
         int yOffset = yOffsetInPixels + r.subPicVerticalShift;
         if (SUCCEEDED(pSubPic->GetSourceAndDest(windowRect, videoRect, rcSource, rcDest,
                                                 videoStretchFactor, xOffsetInPixels, yOffset))) {
+            m_lastSubPicRect = rcDest;
             return pSubPic->AlphaBlt(rcSource, rcDest, pTarget);
         }
     }
 
+    m_lastSubPicRect.SetRectEmpty();
     return E_FAIL;
+}
+
+// ISubPicRectProvider
+
+STDMETHODIMP_(bool) CSubPicAllocatorPresenterImpl::GetSubPicRect(RECT* pSubPicRect)
+{
+    // The rectangle is written by the rendering thread and read by the GUI
+    // thread. It is only used for hit testing, so a slightly outdated value
+    // is harmless and not worth locking for.
+    if (!pSubPicRect || m_lastSubPicRect.IsRectEmpty()) {
+        return false;
+    }
+
+    *pSubPicRect = m_lastSubPicRect;
+    return true;
 }
 
 // ISubPicAllocatorPresenter

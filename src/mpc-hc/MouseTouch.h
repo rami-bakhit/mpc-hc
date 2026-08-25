@@ -79,6 +79,8 @@ private:
     int m_doubleclicktime;
     bool m_bWaitingRButtonUp = false;
     bool m_bPanningVideo = false;
+    bool m_bDraggingSubtitle = false;
+    CPoint m_dragStartPoint;
     CPoint m_panPoint;
 
     std::pair<bool, CPoint> m_switchingToFullscreen;
@@ -101,7 +103,7 @@ private:
     void SetCursor(UINT nFlags, const CPoint& clientPoint);
     void SetCursor(const CPoint& screenPoint);
     bool TestDrag(const CPoint& screenPoint);
-    bool TestPanVideo(UINT nFlags, const CPoint& clientPoint);
+    bool TestMediaDrag(UINT nFlags, const CPoint& clientPoint);
 
     EventClient m_eventc;
     void EventCallback(MpcEvent ev);

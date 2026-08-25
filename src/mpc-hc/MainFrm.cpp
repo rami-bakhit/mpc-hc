@@ -9467,6 +9467,34 @@ void CMainFrame::PanVideoByPixels(int dy)
     }
 }
 
+void CMainFrame::ShiftSubtitlesByPixels(int dy)
+{
+    if (!m_pCAP || dy == 0) {
+        return;
+    }
+
+    AfxGetAppSettings().m_RenderersSettings.subPicVerticalShift += dy;
+
+    if (GetMediaState() != State_Running) {
+        m_pCAP->Paint(false);
+    }
+}
+
+bool CMainFrame::GetSubPicRect(CRect& rect)
+{
+    if (m_pCAP && m_pCurrentSubInput.pSubStream) {
+        if (CComQIPtr<ISubPicRectProvider> pSubPicRectProvider = m_pCAP) {
+            CRect subPicRect;
+            if (pSubPicRectProvider->GetSubPicRect(&subPicRect)) {
+                rect = subPicRect;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void CMainFrame::OnUpdateViewPanNScan(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(GetLoadState() == MLS::LOADED && !m_fAudioOnly && AfxGetAppSettings().iDSVideoRendererType != VIDRNDT_DS_EVR);

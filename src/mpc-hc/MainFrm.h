@@ -787,6 +787,8 @@ public:
     void ToggleD3DFullscreen(bool fSwitchScreenResWhenHasTo);
     void MoveVideoWindow(bool fShowStats = false, bool bSetStoppedVideoRect = false);
     void PanVideoByPixels(int dy);
+    void ShiftSubtitlesByPixels(int dy);
+    bool GetSubPicRect(CRect& rect);
     void SetPreviewVideoPosition();
 
     void RepaintVideo(const bool bForceRepaint = false);

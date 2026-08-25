@@ -124,6 +124,7 @@ void CMouse::ResetToBlankState()
     m_bTrackingMouseLeave = false;
     m_drag = Drag::NO_DRAG;
     m_bPanningVideo = false;
+    m_bDraggingSubtitle = false;
     m_cursor = Cursor::ARROW;
     m_switchingToFullscreen.first = false;
     if (m_bLeftUpDelayed) {
@@ -403,10 +404,13 @@ void CMouse::InternalOnLButtonDown(UINT nFlags, const CPoint& point)
         m_beginDragPoint = point;
         GetWnd().ClientToScreen(&m_beginDragPoint);
     } else if (bIsOnFS && m_bLeftDown) {
-        // in fullscreen the same gesture pans the video instead of moving the window
+        // in fullscreen the same gesture moves the subtitles or pans the video
+        // instead of moving the window
         GetWnd().SetCapture();
+        m_dragStartPoint = point;
         m_panPoint = point;
         m_bPanningVideo = false;
+        m_bDraggingSubtitle = false;
     }
 }
 
@@ -455,6 +459,7 @@ void CMouse::InternalOnLButtonUp(UINT nFlags, const CPoint& point)
 
     m_drag = Drag::NO_DRAG;
     m_bPanningVideo = false;
+    m_bDraggingSubtitle = false;
     m_bLeftDown = false;
     SetCursor(nFlags, point);
 }
@@ -649,17 +654,20 @@ bool CMouse::TestDrag(const CPoint& screenPoint)
     return ret;
 }
 
-bool CMouse::TestPanVideo(UINT nFlags, const CPoint& clientPoint)
+bool CMouse::TestMediaDrag(UINT nFlags, const CPoint& clientPoint)
 {
     if (!(nFlags & MK_LBUTTON)) {
         // the mouse capture can be lost without a button up message
         m_bPanningVideo = false;
+        m_bDraggingSubtitle = false;
         return false;
     }
-    if (!AfxGetAppSettings().bMouseDragPanVideo) {
+
+    const CAppSettings& s = AfxGetAppSettings();
+    if (!s.bMouseDragPanVideo && !s.bMouseDragSubtitles) {
         return false;
     }
-    if (!m_bLeftDown && !m_bPanningVideo) {
+    if (!m_bLeftDown && !m_bPanningVideo && !m_bDraggingSubtitle) {
         return false;
     }
     if (!IsOnFullscreenWindow() || m_pMainFrame->GetLoadState() != MLS::LOADED ||
@@ -667,18 +675,35 @@ bool CMouse::TestPanVideo(UINT nFlags, const CPoint& clientPoint)
         return false;
     }
 
-    if (!m_bPanningVideo) {
-        const CPoint diff = clientPoint - m_panPoint;
-        if (abs(diff.y) < GetSystemMetrics(SM_CYDRAG)) {
+    if (!m_bPanningVideo && !m_bDraggingSubtitle) {
+        // only vertical movement starts a drag, so that horizontal jitter does
+        // not swallow a click
+        if (abs(clientPoint.y - m_dragStartPoint.y) < GetSystemMetrics(SM_CYDRAG)) {
             return false;
         }
-        m_bPanningVideo = true;
+
+        CRect subPicRect;
+        if (s.bMouseDragSubtitles && m_pMainFrame->GetSubPicRect(subPicRect) &&
+                subPicRect.PtInRect(m_dragStartPoint)) {
+            m_bDraggingSubtitle = true;
+        } else if (s.bMouseDragPanVideo) {
+            m_bPanningVideo = true;
+        } else {
+            return false;
+        }
+
         m_bLeftDown = false; // the button release must not trigger the assigned click command
+        m_panPoint = m_dragStartPoint;
     }
 
-    const CPoint delta = clientPoint - m_panPoint;
+    const int delta = clientPoint.y - m_panPoint.y;
     m_panPoint = clientPoint;
-    m_pMainFrame->PanVideoByPixels(delta.y);
+
+    if (m_bDraggingSubtitle) {
+        m_pMainFrame->ShiftSubtitlesByPixels(delta);
+    } else {
+        m_pMainFrame->PanVideoByPixels(delta);
+    }
 
     return true;
 }
@@ -693,7 +718,7 @@ void CMouse::InternalOnMouseMove(UINT nFlags, const CPoint& point)
     CPoint screenPoint(point);
     GetWnd().ClientToScreen(&screenPoint);
 
-    if (!TestPanVideo(nFlags, point) && !TestDrag(screenPoint) && !m_pMainFrame->IsInteractiveVideo()) {
+    if (!TestMediaDrag(nFlags, point) && !TestDrag(screenPoint) && !m_pMainFrame->IsInteractiveVideo()) {
         if (!m_bTrackingMouseLeave) {
             StartMouseLeaveTracker();
         }
