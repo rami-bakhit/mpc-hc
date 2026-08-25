@@ -17152,6 +17152,15 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
                 if (!abRepeat && s.fKeepHistory && s.fRememberFilePos) {
                     abRepeat = pMRU->GetCurrentABRepeat();
                 }
+                if (s.fKeepHistory && s.bRememberFileViewSettings) {
+                    double videoPosY;
+                    int subPicVerticalShift;
+                    double fontScaleOverride;
+                    // the pan position is global state in MPC-HC, so it has to be
+                    // restored for every file, not only for the ones that have it stored
+                    m_PosY = pMRU->GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride)
+                             ? videoPosY : 0.5;
+                }
                 if (s.fKeepHistory && s.bRememberTrackSelection) {
                     if (m_loadedAudioTrackIndex == -1) {
                         m_loadedAudioTrackIndex = pMRU->GetCurrentAudioTrack();
@@ -19611,6 +19620,7 @@ void CMainFrame::SetSubtitle(const SubtitleInput& subInput, bool skip_lcid /* = 
 
     CAppSettings& s = AfxGetAppSettings();
     ResetSubtitlePosAndSize(false);
+    ApplyRememberedSubtitlePosAndSize();
 
     ResetAutoCopySubtitle();
 
@@ -21204,6 +21214,10 @@ void CMainFrame::CloseMediaInternal(bool bNextIsQueued/* = false*/, bool bPendin
 
         // save playback position
         if (s.fKeepHistory && !bPendingFileDelete) {
+            if (s.bRememberFileViewSettings) {
+                s.MRU.UpdateCurrentViewSettings(m_PosY, s.m_RenderersSettings.subPicVerticalShift,
+                                                s.m_RenderersSettings.fontScaleOverride);
+            }
             if (m_bRememberFilePos && !m_fEndOfStream && m_pMS) {
                 REFERENCE_TIME rtNow = 0;
                 m_pMS->GetCurrentPosition(&rtNow);
@@ -22421,6 +22435,22 @@ afx_msg void CMainFrame::OnSubtitleFontSize(UINT nID)
                 AfxMessageBox(_T("Adjusting subtitle text size is not possible for image based subtitle formats."), MB_ICONERROR, 0);
             }
         }
+    }
+}
+
+void CMainFrame::ApplyRememberedSubtitlePosAndSize()
+{
+    CAppSettings& s = AfxGetAppSettings();
+    if (!s.fKeepHistory || !s.bRememberFileViewSettings) {
+        return;
+    }
+
+    double videoPosY;
+    int subPicVerticalShift;
+    double fontScaleOverride;
+    if (s.MRU.GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride)) {
+        s.m_RenderersSettings.subPicVerticalShift = subPicVerticalShift;
+        s.m_RenderersSettings.fontScaleOverride = fontScaleOverride;
     }
 }
 

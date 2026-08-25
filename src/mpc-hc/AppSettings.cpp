@@ -216,6 +216,7 @@ CAppSettings::CAppSettings()
     , bTimeOnSeekBarLeft(false)
     , bMouseDragPanVideo(false)
     , bMouseDragSubtitles(false)
+    , bRememberFileViewSettings(false)
     , nOSDSize(0)
     , bHideWindowedMousePointer(true)
     , iBrightness(0)
@@ -1143,6 +1144,7 @@ void CAppSettings::SaveSettings(bool write_full_history /* = false */)
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_TIME_ON_SEEKBAR_LEFT, bTimeOnSeekBarLeft);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_PAN_VIDEO, bMouseDragPanVideo);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, bMouseDragSubtitles);
+    pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, bRememberFileViewSettings);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, nCustomPresetControlState);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, nCustomPresetCaption);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_STARTUP_PRESET, nStartupPreset);
@@ -1792,6 +1794,7 @@ void CAppSettings::LoadSettings()
     bTimeOnSeekBarLeft = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_TIME_ON_SEEKBAR_LEFT, FALSE);
     bMouseDragPanVideo = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_PAN_VIDEO, FALSE);
     bMouseDragSubtitles = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, FALSE);
+    bRememberFileViewSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, FALSE);
     nCustomPresetControlState = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, CS_SEEKBAR | CS_TOOLBAR);
     nCustomPresetControlState &= (CS_SEEKBAR | CS_TOOLBAR | CS_INFOBAR | CS_STATSBAR | CS_STATUSBAR); // drop invalid bits
     nCustomPresetCaption = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, MODE_HIDEMENU);
@@ -3365,6 +3368,30 @@ int CAppSettings::CRecentFileListWithMoreInfo::GetCurrentSubtitleTrack() {
     return -1;
 }
 
+void CAppSettings::CRecentFileListWithMoreInfo::UpdateCurrentViewSettings(double videoPosY, int subPicVerticalShift, double fontScaleOverride) {
+    size_t idx;
+    if (GetCurrentIndex(idx)) {
+        if (rfe_array[idx].videoPosY != videoPosY || rfe_array[idx].subPicVerticalShift != subPicVerticalShift ||
+                rfe_array[idx].fontScaleOverride != fontScaleOverride) {
+            rfe_array[idx].videoPosY = videoPosY;
+            rfe_array[idx].subPicVerticalShift = subPicVerticalShift;
+            rfe_array[idx].fontScaleOverride = fontScaleOverride;
+            WriteMediaHistoryViewSettings(rfe_array[idx]);
+        }
+    }
+}
+
+bool CAppSettings::CRecentFileListWithMoreInfo::GetCurrentViewSettings(double& videoPosY, int& subPicVerticalShift, double& fontScaleOverride) {
+    size_t idx;
+    if (GetCurrentIndex(idx)) {
+        videoPosY = rfe_array[idx].videoPosY;
+        subPicVerticalShift = rfe_array[idx].subPicVerticalShift;
+        fontScaleOverride = rfe_array[idx].fontScaleOverride;
+        return true;
+    }
+    return false;
+}
+
 void CAppSettings::CRecentFileListWithMoreInfo::AddSubToCurrent(CStringW subpath) {
     size_t idx;
     if (GetCurrentIndex(idx)) {
@@ -3621,6 +3648,9 @@ bool CAppSettings::CRecentFileListWithMoreInfo::LoadMediaHistoryEntry(CStringW h
 
     r.AudioTrackIndex = pApp->GetProfileIntW(subSection, L"AudioTrackIndex", -1);
     r.SubtitleTrackIndex = pApp->GetProfileIntW(subSection, L"SubtitleTrackIndex", -1);
+    r.videoPosY = pApp->GetProfileIntW(subSection, L"VideoPosY", 500) / 1000.0;
+    r.subPicVerticalShift = pApp->GetProfileIntW(subSection, L"SubtitleVerticalShift", 0);
+    r.fontScaleOverride = pApp->GetProfileIntW(subSection, L"SubtitleFontScale", 1000) / 1000.0;
     return true;
 }
 
@@ -3724,6 +3754,35 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistorySubtitleIndex(R
     }
 }
 
+void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryViewSettings(RecentFileEntry& r) {
+    auto pApp = AfxGetMyApp();
+
+    if (r.hash.IsEmpty()) {
+        r.hash = getRFEHash(r.fns.GetHead());
+    }
+
+    CStringW subSection;
+    subSection.Format(L"%s\\%s", m_section, static_cast<LPCWSTR>(r.hash));
+
+    if (r.videoPosY != 0.5) {
+        pApp->WriteProfileInt(subSection, L"VideoPosY", int(lround(r.videoPosY * 1000.0)));
+    } else {
+        pApp->WriteProfileStringW(subSection, L"VideoPosY", nullptr);
+    }
+
+    if (r.subPicVerticalShift != 0) {
+        pApp->WriteProfileInt(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
+    } else {
+        pApp->WriteProfileStringW(subSection, L"SubtitleVerticalShift", nullptr);
+    }
+
+    if (r.fontScaleOverride != 1.0) {
+        pApp->WriteProfileInt(subSection, L"SubtitleFontScale", int(lround(r.fontScaleOverride * 1000.0)));
+    } else {
+        pApp->WriteProfileStringW(subSection, L"SubtitleFontScale", nullptr);
+    }
+}
+
 void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFileEntry& r, bool updateLastOpened /* = false */) {
     auto pApp = AfxGetMyApp();
 
@@ -3804,6 +3863,24 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFil
         pApp->WriteProfileInt(subSection, L"SubtitleTrackIndex", int(r.SubtitleTrackIndex));
     } else {
         pApp->WriteProfileStringW(subSection, L"SubtitleTrackIndex", nullptr);
+    }
+
+    if (r.videoPosY != 0.5) {
+        pApp->WriteProfileInt(subSection, L"VideoPosY", int(lround(r.videoPosY * 1000.0)));
+    } else {
+        pApp->WriteProfileStringW(subSection, L"VideoPosY", nullptr);
+    }
+
+    if (r.subPicVerticalShift != 0) {
+        pApp->WriteProfileInt(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
+    } else {
+        pApp->WriteProfileStringW(subSection, L"SubtitleVerticalShift", nullptr);
+    }
+
+    if (r.fontScaleOverride != 1.0) {
+        pApp->WriteProfileInt(subSection, L"SubtitleFontScale", int(lround(r.fontScaleOverride * 1000.0)));
+    } else {
+        pApp->WriteProfileStringW(subSection, L"SubtitleFontScale", nullptr);
     }
 
     auto now = std::chrono::system_clock::now();

@@ -1397,6 +1397,7 @@ public:
     void        KillTimersStop();
     void        AdjustStreamPosPoller(bool restart);
     void        ResetSubtitlePosAndSize(bool repaint = false);
+    void        ApplyRememberedSubtitlePosAndSize();
 
     // MPC API functions
     void        ProcessAPICommand(HWND hSender, COPYDATASTRUCT* pCDS);

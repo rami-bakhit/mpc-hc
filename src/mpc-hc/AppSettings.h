@@ -463,6 +463,9 @@ public:
         abRepeat = r.abRepeat;
         AudioTrackIndex = r.AudioTrackIndex;
         SubtitleTrackIndex = r.SubtitleTrackIndex;
+        videoPosY = r.videoPosY;
+        subPicVerticalShift = r.subPicVerticalShift;
+        fontScaleOverride = r.fontScaleOverride;
     }
     RecentFileEntry(const RecentFileEntry &r) {
         InitEntry(r);
@@ -479,6 +482,9 @@ public:
     ABRepeat abRepeat;
     int AudioTrackIndex = -1;
     int SubtitleTrackIndex = -1;
+    double videoPosY = 0.5;
+    int subPicVerticalShift = 0;
+    double fontScaleOverride = 1.0;
 
     void operator=(const RecentFileEntry &r) {
         InitEntry(r);
@@ -542,6 +548,8 @@ class CAppSettings
         int GetCurrentAudioTrack();
         void UpdateCurrentSubtitleTrack(int audioIndex);
         int GetCurrentSubtitleTrack();
+        void UpdateCurrentViewSettings(double videoPosY, int subPicVerticalShift, double fontScaleOverride);
+        bool GetCurrentViewSettings(double& videoPosY, int& subPicVerticalShift, double& fontScaleOverride);
         void AddSubToCurrent(CStringW subpath);
         void SetCurrentTitle(CStringW subpath);
         void UpdateCurrentABRepeat(ABRepeat abRepeat);
@@ -549,6 +557,7 @@ class CAppSettings
         void ReadMediaHistory();
         void WriteMediaHistoryAudioIndex(RecentFileEntry& r);
         void WriteMediaHistorySubtitleIndex(RecentFileEntry& r);
+        void WriteMediaHistoryViewSettings(RecentFileEntry& r);
         void WriteMediaHistoryEntry(RecentFileEntry& r, bool updateLastOpened = false);
         void SaveMediaHistory();
         void ReadLegacyMediaHistory(std::map<CStringW, size_t> &filenameToIndex);
@@ -897,6 +906,7 @@ public:
     bool            bTimeOnSeekBarLeft;
     bool            bMouseDragPanVideo;
     bool            bMouseDragSubtitles;
+    bool            bRememberFileViewSettings;
     CString         strOSDFont;
     int             nOSDSize;
     bool            bHideWindowedMousePointer;
