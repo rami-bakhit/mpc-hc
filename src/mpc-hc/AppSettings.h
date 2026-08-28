@@ -446,9 +446,13 @@ struct ABRepeat {
     ULONGLONG tcLastRepeat;
 };
 
-// Marks a color control value that has never been stored for a file. Any real
-// value fits in the ranges reported by the renderer, so this can not collide.
-#define COLOR_SETTING_UNSET INT_MIN
+// Mark a per file setting that has never been stored, so that a stored value
+// which happens to equal the default is not mistaken for the absence of one.
+// No real value can collide: the color controls stay inside the ranges reported
+// by the renderer, the image position is a fraction between 0 and 1 and the
+// subtitle scale is always positive.
+#define SETTING_UNSET_INT INT_MIN
+#define SETTING_UNSET_DOUBLE (-1.0)
 
 class RecentFileEntry {
 public:
@@ -490,13 +494,13 @@ public:
     ABRepeat abRepeat;
     int AudioTrackIndex = -1;
     int SubtitleTrackIndex = -1;
-    double videoPosY = 0.5;
-    int subPicVerticalShift = 0;
-    double fontScaleOverride = 1.0;
-    int colorBrightness = COLOR_SETTING_UNSET;
-    int colorContrast = COLOR_SETTING_UNSET;
-    int colorHue = COLOR_SETTING_UNSET;
-    int colorSaturation = COLOR_SETTING_UNSET;
+    double videoPosY = SETTING_UNSET_DOUBLE;
+    int subPicVerticalShift = SETTING_UNSET_INT;
+    double fontScaleOverride = SETTING_UNSET_DOUBLE;
+    int colorBrightness = SETTING_UNSET_INT;
+    int colorContrast = SETTING_UNSET_INT;
+    int colorHue = SETTING_UNSET_INT;
+    int colorSaturation = SETTING_UNSET_INT;
 
     void operator=(const RecentFileEntry &r) {
         InitEntry(r);
@@ -564,6 +568,7 @@ class CAppSettings
         bool GetCurrentViewSettings(double& videoPosY, int& subPicVerticalShift, double& fontScaleOverride);
         void UpdateCurrentColorSettings(int brightness, int contrast, int hue, int saturation);
         bool GetCurrentColorSettings(int& brightness, int& contrast, int& hue, int& saturation);
+        const RecentFileEntry* FindNewestInSameFolder(size_t currentIdx);
         void AddSubToCurrent(CStringW subpath);
         void SetCurrentTitle(CStringW subpath);
         void UpdateCurrentABRepeat(ABRepeat abRepeat);
@@ -923,6 +928,7 @@ public:
     bool            bMouseDragSubtitles;
     bool            bRememberFileViewSettings;
     bool            bRememberFileColorSettings;
+    bool            bInheritSettingsFromFolder;
     CString         strOSDFont;
     int             nOSDSize;
     bool            bHideWindowedMousePointer;

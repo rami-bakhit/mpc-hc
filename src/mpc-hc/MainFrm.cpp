@@ -17158,22 +17158,28 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
                     abRepeat = pMRU->GetCurrentABRepeat();
                 }
                 if (s.fKeepHistory && s.bRememberFileViewSettings) {
-                    double videoPosY;
-                    int subPicVerticalShift;
-                    double fontScaleOverride;
+                    double videoPosY = SETTING_UNSET_DOUBLE;
+                    int subPicVerticalShift = SETTING_UNSET_INT;
+                    double fontScaleOverride = SETTING_UNSET_DOUBLE;
+                    pMRU->GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride);
                     // the pan position is global state in MPC-HC, so it has to be
                     // restored for every file, not only for the ones that have it stored
-                    m_PosY = pMRU->GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride)
-                             ? videoPosY : 0.5;
+                    m_PosY = videoPosY != SETTING_UNSET_DOUBLE ? videoPosY : 0.5;
                 }
                 if (s.fKeepHistory && s.bRememberFileColorSettings) {
-                    // Files without stored values keep the current (global) ones.
+                    // A file with nothing stored for it, and nothing to inherit,
+                    // starts neutral rather than keeping the previous file's look.
                     // SetupVMR9ColorControl() has already run at this point, so the
                     // renderer has to be updated explicitly. The EVR path is set up
                     // later, in OnPlayPlay(), and picks these values up on its own.
-                    if (pMRU->GetCurrentColorSettings(s.iBrightness, s.iContrast, s.iHue, s.iSaturation)) {
-                        SetColorControl(ProcAmp_All, s.iBrightness, s.iContrast, s.iHue, s.iSaturation);
+                    if (!pMRU->GetCurrentColorSettings(s.iBrightness, s.iContrast, s.iHue, s.iSaturation)) {
+                        CMPlayerCApp* pApp = AfxGetMyApp();
+                        s.iBrightness = pApp->GetColorControl(ProcAmp_Brightness)->DefaultValue;
+                        s.iContrast   = pApp->GetColorControl(ProcAmp_Contrast)->DefaultValue;
+                        s.iHue        = pApp->GetColorControl(ProcAmp_Hue)->DefaultValue;
+                        s.iSaturation = pApp->GetColorControl(ProcAmp_Saturation)->DefaultValue;
                     }
+                    SetColorControl(ProcAmp_All, s.iBrightness, s.iContrast, s.iHue, s.iSaturation);
                 }
                 if (s.fKeepHistory && s.bRememberTrackSelection) {
                     if (m_loadedAudioTrackIndex == -1) {
@@ -22462,12 +22468,16 @@ void CMainFrame::ApplyRememberedSubtitlePosAndSize()
         return;
     }
 
-    double videoPosY;
-    int subPicVerticalShift;
-    double fontScaleOverride;
+    double videoPosY = SETTING_UNSET_DOUBLE;
+    int subPicVerticalShift = SETTING_UNSET_INT;
+    double fontScaleOverride = SETTING_UNSET_DOUBLE;
     if (s.MRU.GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride)) {
-        s.m_RenderersSettings.subPicVerticalShift = subPicVerticalShift;
-        s.m_RenderersSettings.fontScaleOverride = fontScaleOverride;
+        if (subPicVerticalShift != SETTING_UNSET_INT) {
+            s.m_RenderersSettings.subPicVerticalShift = subPicVerticalShift;
+        }
+        if (fontScaleOverride != SETTING_UNSET_DOUBLE) {
+            s.m_RenderersSettings.fontScaleOverride = fontScaleOverride;
+        }
     }
 }
 

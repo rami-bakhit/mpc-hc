@@ -218,6 +218,7 @@ CAppSettings::CAppSettings()
     , bMouseDragSubtitles(false)
     , bRememberFileViewSettings(false)
     , bRememberFileColorSettings(false)
+    , bInheritSettingsFromFolder(false)
     , nOSDSize(0)
     , bHideWindowedMousePointer(true)
     , iBrightness(0)
@@ -1147,6 +1148,7 @@ void CAppSettings::SaveSettings(bool write_full_history /* = false */)
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, bMouseDragSubtitles);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, bRememberFileViewSettings);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, bRememberFileColorSettings);
+    pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_INHERIT_SETTINGS_FROM_FOLDER, bInheritSettingsFromFolder);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, nCustomPresetControlState);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, nCustomPresetCaption);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_STARTUP_PRESET, nStartupPreset);
@@ -1798,6 +1800,7 @@ void CAppSettings::LoadSettings()
     bMouseDragSubtitles = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, FALSE);
     bRememberFileViewSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, FALSE);
     bRememberFileColorSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, FALSE);
+    bInheritSettingsFromFolder = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_INHERIT_SETTINGS_FROM_FOLDER, FALSE);
     nCustomPresetControlState = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, CS_SEEKBAR | CS_TOOLBAR);
     nCustomPresetControlState &= (CS_SEEKBAR | CS_TOOLBAR | CS_INFOBAR | CS_STATSBAR | CS_STATUSBAR); // drop invalid bits
     nCustomPresetCaption = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, MODE_HIDEMENU);
@@ -3384,15 +3387,66 @@ void CAppSettings::CRecentFileListWithMoreInfo::UpdateCurrentViewSettings(double
     }
 }
 
+// Returns the newest entry that sits in the same folder as the file at
+// currentIdx, or nullptr when there is none. rfe_array is kept in most recently
+// opened order, both by Add() and by ReadMediaHistory(), so the first match is
+// the newest one.
+const RecentFileEntry* CAppSettings::CRecentFileListWithMoreInfo::FindNewestInSameFolder(size_t currentIdx) {
+    if (currentIdx >= rfe_array.GetCount() || rfe_array[currentIdx].fns.IsEmpty()) {
+        return nullptr;
+    }
+    CString current = rfe_array[currentIdx].fns.GetHead();
+    if (PathUtils::IsURL(current)) {
+        return nullptr;
+    }
+    CString folder = PathUtils::DirName(current);
+    if (folder.IsEmpty()) {
+        return nullptr;
+    }
+    for (size_t i = 0; i < rfe_array.GetCount(); i++) {
+        if (i == currentIdx || rfe_array[i].fns.IsEmpty()) {
+            continue;
+        }
+        CString other = rfe_array[i].fns.GetHead();
+        if (!PathUtils::IsURL(other) && folder.CompareNoCase(PathUtils::DirName(other)) == 0) {
+            return &rfe_array[i];
+        }
+    }
+    return nullptr;
+}
+
+// The arguments are in/out: a value that was never stored for this file is left
+// untouched, so the caller keeps whatever it passed in. When the file has no
+// stored value of its own and inheriting is enabled, the newest file from the
+// same folder provides it instead.
 bool CAppSettings::CRecentFileListWithMoreInfo::GetCurrentViewSettings(double& videoPosY, int& subPicVerticalShift, double& fontScaleOverride) {
     size_t idx;
-    if (GetCurrentIndex(idx)) {
-        videoPosY = rfe_array[idx].videoPosY;
-        subPicVerticalShift = rfe_array[idx].subPicVerticalShift;
-        fontScaleOverride = rfe_array[idx].fontScaleOverride;
-        return true;
+    if (!GetCurrentIndex(idx)) {
+        return false;
     }
-    return false;
+    const RecentFileEntry* entries[2] = { &rfe_array[idx], nullptr };
+    if (AfxGetAppSettings().bInheritSettingsFromFolder) {
+        entries[1] = FindNewestInSameFolder(idx);
+    }
+    bool found = false;
+    for (const RecentFileEntry* r : entries) {
+        if (!r) {
+            continue;
+        }
+        if (videoPosY == SETTING_UNSET_DOUBLE && r->videoPosY != SETTING_UNSET_DOUBLE) {
+            videoPosY = r->videoPosY;
+            found = true;
+        }
+        if (subPicVerticalShift == SETTING_UNSET_INT && r->subPicVerticalShift != SETTING_UNSET_INT) {
+            subPicVerticalShift = r->subPicVerticalShift;
+            found = true;
+        }
+        if (fontScaleOverride == SETTING_UNSET_DOUBLE && r->fontScaleOverride != SETTING_UNSET_DOUBLE) {
+            fontScaleOverride = r->fontScaleOverride;
+            found = true;
+        }
+    }
+    return found;
 }
 
 void CAppSettings::CRecentFileListWithMoreInfo::UpdateCurrentColorSettings(int brightness, int contrast, int hue, int saturation) {
@@ -3409,30 +3463,33 @@ void CAppSettings::CRecentFileListWithMoreInfo::UpdateCurrentColorSettings(int b
     }
 }
 
-// The arguments are in/out: a value that was never stored for this file is left
-// untouched, so the caller keeps whatever it passed in.
+// Same in/out contract and the same folder fallback as GetCurrentViewSettings().
 bool CAppSettings::CRecentFileListWithMoreInfo::GetCurrentColorSettings(int& brightness, int& contrast, int& hue, int& saturation) {
     size_t idx;
     if (!GetCurrentIndex(idx)) {
         return false;
     }
-    const RecentFileEntry& r = rfe_array[idx];
+    const RecentFileEntry* entries[2] = { &rfe_array[idx], nullptr };
+    if (AfxGetAppSettings().bInheritSettingsFromFolder) {
+        entries[1] = FindNewestInSameFolder(idx);
+    }
     bool found = false;
-    if (r.colorBrightness != COLOR_SETTING_UNSET) {
-        brightness = r.colorBrightness;
+    for (const RecentFileEntry* r : entries) {
+        if (!r) {
+            continue;
+        }
+        // The four values describe one look, so they are taken as a set or not
+        // at all - never half from this file and half from the folder.
+        if (r->colorBrightness == SETTING_UNSET_INT || r->colorContrast == SETTING_UNSET_INT ||
+                r->colorHue == SETTING_UNSET_INT || r->colorSaturation == SETTING_UNSET_INT) {
+            continue;
+        }
+        brightness = r->colorBrightness;
+        contrast = r->colorContrast;
+        hue = r->colorHue;
+        saturation = r->colorSaturation;
         found = true;
-    }
-    if (r.colorContrast != COLOR_SETTING_UNSET) {
-        contrast = r.colorContrast;
-        found = true;
-    }
-    if (r.colorHue != COLOR_SETTING_UNSET) {
-        hue = r.colorHue;
-        found = true;
-    }
-    if (r.colorSaturation != COLOR_SETTING_UNSET) {
-        saturation = r.colorSaturation;
-        found = true;
+        break;
     }
     return found;
 }
@@ -3644,6 +3701,31 @@ bool CAppSettings::CRecentFileListWithMoreInfo::LoadMediaHistoryEntryDVD(ULONGLO
     return true;
 }
 
+// Fractions are stored as thousandths, because writing them as text and reading
+// them back through the CRT depends on the locale decimal separator.
+static double ReadThousandthsSetting(const CStringW& subSection, LPCWSTR key) {
+    int stored = AfxGetMyApp()->GetProfileIntW(subSection, key, SETTING_UNSET_INT);
+    return stored != SETTING_UNSET_INT ? stored / 1000.0 : SETTING_UNSET_DOUBLE;
+}
+
+static void WriteThousandthsSetting(const CStringW& subSection, LPCWSTR key, double value) {
+    auto pApp = AfxGetMyApp();
+    if (value != SETTING_UNSET_DOUBLE) {
+        pApp->WriteProfileInt(subSection, key, int(lround(value * 1000.0)));
+    } else {
+        pApp->WriteProfileStringW(subSection, key, nullptr);
+    }
+}
+
+static void WriteIntSetting(const CStringW& subSection, LPCWSTR key, int value) {
+    auto pApp = AfxGetMyApp();
+    if (value != SETTING_UNSET_INT) {
+        pApp->WriteProfileInt(subSection, key, value);
+    } else {
+        pApp->WriteProfileStringW(subSection, key, nullptr);
+    }
+}
+
 bool CAppSettings::CRecentFileListWithMoreInfo::LoadMediaHistoryEntry(CStringW hash, RecentFileEntry &r) {
     auto pApp = AfxGetMyApp();
     CStringW fn, subSection, t;
@@ -3693,13 +3775,13 @@ bool CAppSettings::CRecentFileListWithMoreInfo::LoadMediaHistoryEntry(CStringW h
 
     r.AudioTrackIndex = pApp->GetProfileIntW(subSection, L"AudioTrackIndex", -1);
     r.SubtitleTrackIndex = pApp->GetProfileIntW(subSection, L"SubtitleTrackIndex", -1);
-    r.videoPosY = pApp->GetProfileIntW(subSection, L"VideoPosY", 500) / 1000.0;
-    r.subPicVerticalShift = pApp->GetProfileIntW(subSection, L"SubtitleVerticalShift", 0);
-    r.fontScaleOverride = pApp->GetProfileIntW(subSection, L"SubtitleFontScale", 1000) / 1000.0;
-    r.colorBrightness = pApp->GetProfileIntW(subSection, L"ColorBrightness", COLOR_SETTING_UNSET);
-    r.colorContrast = pApp->GetProfileIntW(subSection, L"ColorContrast", COLOR_SETTING_UNSET);
-    r.colorHue = pApp->GetProfileIntW(subSection, L"ColorHue", COLOR_SETTING_UNSET);
-    r.colorSaturation = pApp->GetProfileIntW(subSection, L"ColorSaturation", COLOR_SETTING_UNSET);
+    r.videoPosY = ReadThousandthsSetting(subSection, L"VideoPosY");
+    r.subPicVerticalShift = pApp->GetProfileIntW(subSection, L"SubtitleVerticalShift", SETTING_UNSET_INT);
+    r.fontScaleOverride = ReadThousandthsSetting(subSection, L"SubtitleFontScale");
+    r.colorBrightness = pApp->GetProfileIntW(subSection, L"ColorBrightness", SETTING_UNSET_INT);
+    r.colorContrast = pApp->GetProfileIntW(subSection, L"ColorContrast", SETTING_UNSET_INT);
+    r.colorHue = pApp->GetProfileIntW(subSection, L"ColorHue", SETTING_UNSET_INT);
+    r.colorSaturation = pApp->GetProfileIntW(subSection, L"ColorSaturation", SETTING_UNSET_INT);
     return true;
 }
 
@@ -3804,8 +3886,6 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistorySubtitleIndex(R
 }
 
 void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryViewSettings(RecentFileEntry& r) {
-    auto pApp = AfxGetMyApp();
-
     if (r.hash.IsEmpty()) {
         r.hash = getRFEHash(r.fns.GetHead());
     }
@@ -3813,37 +3893,12 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryViewSettings(Re
     CStringW subSection;
     subSection.Format(L"%s\\%s", m_section, static_cast<LPCWSTR>(r.hash));
 
-    if (r.videoPosY != 0.5) {
-        pApp->WriteProfileInt(subSection, L"VideoPosY", int(lround(r.videoPosY * 1000.0)));
-    } else {
-        pApp->WriteProfileStringW(subSection, L"VideoPosY", nullptr);
-    }
-
-    if (r.subPicVerticalShift != 0) {
-        pApp->WriteProfileInt(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
-    } else {
-        pApp->WriteProfileStringW(subSection, L"SubtitleVerticalShift", nullptr);
-    }
-
-    if (r.fontScaleOverride != 1.0) {
-        pApp->WriteProfileInt(subSection, L"SubtitleFontScale", int(lround(r.fontScaleOverride * 1000.0)));
-    } else {
-        pApp->WriteProfileStringW(subSection, L"SubtitleFontScale", nullptr);
-    }
-}
-
-static void WriteColorSetting(const CStringW& subSection, LPCWSTR key, int value) {
-    auto pApp = AfxGetMyApp();
-    if (value != COLOR_SETTING_UNSET) {
-        pApp->WriteProfileInt(subSection, key, value);
-    } else {
-        pApp->WriteProfileStringW(subSection, key, nullptr);
-    }
+    WriteThousandthsSetting(subSection, L"VideoPosY", r.videoPosY);
+    WriteIntSetting(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
+    WriteThousandthsSetting(subSection, L"SubtitleFontScale", r.fontScaleOverride);
 }
 
 void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryColorSettings(RecentFileEntry& r) {
-    auto pApp = AfxGetMyApp();
-
     if (r.hash.IsEmpty()) {
         r.hash = getRFEHash(r.fns.GetHead());
     }
@@ -3851,10 +3906,10 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryColorSettings(R
     CStringW subSection;
     subSection.Format(L"%s\\%s", m_section, static_cast<LPCWSTR>(r.hash));
 
-    WriteColorSetting(subSection, L"ColorBrightness", r.colorBrightness);
-    WriteColorSetting(subSection, L"ColorContrast", r.colorContrast);
-    WriteColorSetting(subSection, L"ColorHue", r.colorHue);
-    WriteColorSetting(subSection, L"ColorSaturation", r.colorSaturation);
+    WriteIntSetting(subSection, L"ColorBrightness", r.colorBrightness);
+    WriteIntSetting(subSection, L"ColorContrast", r.colorContrast);
+    WriteIntSetting(subSection, L"ColorHue", r.colorHue);
+    WriteIntSetting(subSection, L"ColorSaturation", r.colorSaturation);
 }
 
 void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFileEntry& r, bool updateLastOpened /* = false */) {
@@ -3939,28 +3994,14 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFil
         pApp->WriteProfileStringW(subSection, L"SubtitleTrackIndex", nullptr);
     }
 
-    if (r.videoPosY != 0.5) {
-        pApp->WriteProfileInt(subSection, L"VideoPosY", int(lround(r.videoPosY * 1000.0)));
-    } else {
-        pApp->WriteProfileStringW(subSection, L"VideoPosY", nullptr);
-    }
+    WriteThousandthsSetting(subSection, L"VideoPosY", r.videoPosY);
+    WriteIntSetting(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
+    WriteThousandthsSetting(subSection, L"SubtitleFontScale", r.fontScaleOverride);
 
-    if (r.subPicVerticalShift != 0) {
-        pApp->WriteProfileInt(subSection, L"SubtitleVerticalShift", r.subPicVerticalShift);
-    } else {
-        pApp->WriteProfileStringW(subSection, L"SubtitleVerticalShift", nullptr);
-    }
-
-    if (r.fontScaleOverride != 1.0) {
-        pApp->WriteProfileInt(subSection, L"SubtitleFontScale", int(lround(r.fontScaleOverride * 1000.0)));
-    } else {
-        pApp->WriteProfileStringW(subSection, L"SubtitleFontScale", nullptr);
-    }
-
-    WriteColorSetting(subSection, L"ColorBrightness", r.colorBrightness);
-    WriteColorSetting(subSection, L"ColorContrast", r.colorContrast);
-    WriteColorSetting(subSection, L"ColorHue", r.colorHue);
-    WriteColorSetting(subSection, L"ColorSaturation", r.colorSaturation);
+    WriteIntSetting(subSection, L"ColorBrightness", r.colorBrightness);
+    WriteIntSetting(subSection, L"ColorContrast", r.colorContrast);
+    WriteIntSetting(subSection, L"ColorHue", r.colorHue);
+    WriteIntSetting(subSection, L"ColorSaturation", r.colorSaturation);
 
     auto now = std::chrono::system_clock::now();
 
