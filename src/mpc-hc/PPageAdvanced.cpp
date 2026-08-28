@@ -158,6 +158,7 @@ void CPPageAdvanced::InitSettings()
     addBoolItem(MOUSE_DRAG_PAN_VIDEO, IDS_RS_MOUSE_DRAG_PAN_VIDEO, false, s.bMouseDragPanVideo, L"Pan the video image vertically by pressing the left mouse button and moving the mouse. Only active in fullscreen mode.");
     addBoolItem(MOUSE_DRAG_SUBTITLES, IDS_RS_MOUSE_DRAG_SUBTITLES, false, s.bMouseDragSubtitles, L"Move the subtitles vertically by pressing the left mouse button on them and moving the mouse. Only active in fullscreen mode.");
     addBoolItem(REMEMBER_FILE_VIEW_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, false, s.bRememberFileViewSettings, L"Remember the vertical image position, the subtitle position and the subtitle size for each file in the history.");
+    addBoolItem(REMEMBER_FILE_COLOR_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, false, s.bRememberFileColorSettings, L"Remember the brightness, contrast, hue and saturation settings for each file in the history.");
     addIntItem(COVER_SIZE_LIMIT, IDS_RS_COVER_ART_SIZE_LIMIT, 600, s.nCoverArtSizeLimit, std::make_pair(0, INT_MAX), StrRes(IDS_PPAGEADVANCED_COVER_SIZE_LIMIT));
     addBoolItem(OPEN_REC_PANEL_WHEN_OPENING_DEVICE, IDS_RS_OPEN_REC_PANEL_WHEN_OPENING_DEVICE, true, s.bOpenRecPanelWhenOpeningDevice, StrRes(IDS_PPAGEADVANCED_OPEN_REC_PANEL_WHEN_OPENING_DEVICE));
     addBoolItem(CONFIRM_FILE_DELETE, IDS_RS_CONFIRM_FILE_DELETE, true, s.bConfirmFileDelete, StrRes(IDS_PPAGEADVANCED_CONFIRM_FILE_DELETE));

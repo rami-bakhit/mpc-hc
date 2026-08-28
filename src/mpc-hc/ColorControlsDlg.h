@@ -36,6 +36,7 @@ public:
     UINT GetDialogTemplateID() const override { return IDD; }
     void SetupAnchors() override;
     TrackSizeConstraints GetTrackSizeConstraints() const override;
+    void UpdateSliders();
 
 protected:
     CMPCThemeSliderCtrl m_SliBrightness;
@@ -46,8 +47,6 @@ protected:
     CString m_sContrast;
     CString m_sHue;
     CString m_sSaturation;
-
-    void UpdateSliders();
 
     virtual void DoDataExchange(CDataExchange* pDX) override;
     virtual BOOL OnInitDialog() override;

@@ -446,6 +446,10 @@ struct ABRepeat {
     ULONGLONG tcLastRepeat;
 };
 
+// Marks a color control value that has never been stored for a file. Any real
+// value fits in the ranges reported by the renderer, so this can not collide.
+#define COLOR_SETTING_UNSET INT_MIN
+
 class RecentFileEntry {
 public:
     RecentFileEntry() {}
@@ -466,6 +470,10 @@ public:
         videoPosY = r.videoPosY;
         subPicVerticalShift = r.subPicVerticalShift;
         fontScaleOverride = r.fontScaleOverride;
+        colorBrightness = r.colorBrightness;
+        colorContrast = r.colorContrast;
+        colorHue = r.colorHue;
+        colorSaturation = r.colorSaturation;
     }
     RecentFileEntry(const RecentFileEntry &r) {
         InitEntry(r);
@@ -485,6 +493,10 @@ public:
     double videoPosY = 0.5;
     int subPicVerticalShift = 0;
     double fontScaleOverride = 1.0;
+    int colorBrightness = COLOR_SETTING_UNSET;
+    int colorContrast = COLOR_SETTING_UNSET;
+    int colorHue = COLOR_SETTING_UNSET;
+    int colorSaturation = COLOR_SETTING_UNSET;
 
     void operator=(const RecentFileEntry &r) {
         InitEntry(r);
@@ -550,6 +562,8 @@ class CAppSettings
         int GetCurrentSubtitleTrack();
         void UpdateCurrentViewSettings(double videoPosY, int subPicVerticalShift, double fontScaleOverride);
         bool GetCurrentViewSettings(double& videoPosY, int& subPicVerticalShift, double& fontScaleOverride);
+        void UpdateCurrentColorSettings(int brightness, int contrast, int hue, int saturation);
+        bool GetCurrentColorSettings(int& brightness, int& contrast, int& hue, int& saturation);
         void AddSubToCurrent(CStringW subpath);
         void SetCurrentTitle(CStringW subpath);
         void UpdateCurrentABRepeat(ABRepeat abRepeat);
@@ -558,6 +572,7 @@ class CAppSettings
         void WriteMediaHistoryAudioIndex(RecentFileEntry& r);
         void WriteMediaHistorySubtitleIndex(RecentFileEntry& r);
         void WriteMediaHistoryViewSettings(RecentFileEntry& r);
+        void WriteMediaHistoryColorSettings(RecentFileEntry& r);
         void WriteMediaHistoryEntry(RecentFileEntry& r, bool updateLastOpened = false);
         void SaveMediaHistory();
         void ReadLegacyMediaHistory(std::map<CStringW, size_t> &filenameToIndex);
@@ -907,6 +922,7 @@ public:
     bool            bMouseDragPanVideo;
     bool            bMouseDragSubtitles;
     bool            bRememberFileViewSettings;
+    bool            bRememberFileColorSettings;
     CString         strOSDFont;
     int             nOSDSize;
     bool            bHideWindowedMousePointer;

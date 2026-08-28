@@ -217,6 +217,7 @@ CAppSettings::CAppSettings()
     , bMouseDragPanVideo(false)
     , bMouseDragSubtitles(false)
     , bRememberFileViewSettings(false)
+    , bRememberFileColorSettings(false)
     , nOSDSize(0)
     , bHideWindowedMousePointer(true)
     , iBrightness(0)
@@ -1145,6 +1146,7 @@ void CAppSettings::SaveSettings(bool write_full_history /* = false */)
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_PAN_VIDEO, bMouseDragPanVideo);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, bMouseDragSubtitles);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, bRememberFileViewSettings);
+    pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, bRememberFileColorSettings);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, nCustomPresetControlState);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, nCustomPresetCaption);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_STARTUP_PRESET, nStartupPreset);
@@ -1795,6 +1797,7 @@ void CAppSettings::LoadSettings()
     bMouseDragPanVideo = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_PAN_VIDEO, FALSE);
     bMouseDragSubtitles = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MOUSE_DRAG_SUBTITLES, FALSE);
     bRememberFileViewSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, FALSE);
+    bRememberFileColorSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, FALSE);
     nCustomPresetControlState = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, CS_SEEKBAR | CS_TOOLBAR);
     nCustomPresetControlState &= (CS_SEEKBAR | CS_TOOLBAR | CS_INFOBAR | CS_STATSBAR | CS_STATUSBAR); // drop invalid bits
     nCustomPresetCaption = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, MODE_HIDEMENU);
@@ -3392,6 +3395,48 @@ bool CAppSettings::CRecentFileListWithMoreInfo::GetCurrentViewSettings(double& v
     return false;
 }
 
+void CAppSettings::CRecentFileListWithMoreInfo::UpdateCurrentColorSettings(int brightness, int contrast, int hue, int saturation) {
+    size_t idx;
+    if (GetCurrentIndex(idx)) {
+        if (rfe_array[idx].colorBrightness != brightness || rfe_array[idx].colorContrast != contrast ||
+                rfe_array[idx].colorHue != hue || rfe_array[idx].colorSaturation != saturation) {
+            rfe_array[idx].colorBrightness = brightness;
+            rfe_array[idx].colorContrast = contrast;
+            rfe_array[idx].colorHue = hue;
+            rfe_array[idx].colorSaturation = saturation;
+            WriteMediaHistoryColorSettings(rfe_array[idx]);
+        }
+    }
+}
+
+// The arguments are in/out: a value that was never stored for this file is left
+// untouched, so the caller keeps whatever it passed in.
+bool CAppSettings::CRecentFileListWithMoreInfo::GetCurrentColorSettings(int& brightness, int& contrast, int& hue, int& saturation) {
+    size_t idx;
+    if (!GetCurrentIndex(idx)) {
+        return false;
+    }
+    const RecentFileEntry& r = rfe_array[idx];
+    bool found = false;
+    if (r.colorBrightness != COLOR_SETTING_UNSET) {
+        brightness = r.colorBrightness;
+        found = true;
+    }
+    if (r.colorContrast != COLOR_SETTING_UNSET) {
+        contrast = r.colorContrast;
+        found = true;
+    }
+    if (r.colorHue != COLOR_SETTING_UNSET) {
+        hue = r.colorHue;
+        found = true;
+    }
+    if (r.colorSaturation != COLOR_SETTING_UNSET) {
+        saturation = r.colorSaturation;
+        found = true;
+    }
+    return found;
+}
+
 void CAppSettings::CRecentFileListWithMoreInfo::AddSubToCurrent(CStringW subpath) {
     size_t idx;
     if (GetCurrentIndex(idx)) {
@@ -3651,6 +3696,10 @@ bool CAppSettings::CRecentFileListWithMoreInfo::LoadMediaHistoryEntry(CStringW h
     r.videoPosY = pApp->GetProfileIntW(subSection, L"VideoPosY", 500) / 1000.0;
     r.subPicVerticalShift = pApp->GetProfileIntW(subSection, L"SubtitleVerticalShift", 0);
     r.fontScaleOverride = pApp->GetProfileIntW(subSection, L"SubtitleFontScale", 1000) / 1000.0;
+    r.colorBrightness = pApp->GetProfileIntW(subSection, L"ColorBrightness", COLOR_SETTING_UNSET);
+    r.colorContrast = pApp->GetProfileIntW(subSection, L"ColorContrast", COLOR_SETTING_UNSET);
+    r.colorHue = pApp->GetProfileIntW(subSection, L"ColorHue", COLOR_SETTING_UNSET);
+    r.colorSaturation = pApp->GetProfileIntW(subSection, L"ColorSaturation", COLOR_SETTING_UNSET);
     return true;
 }
 
@@ -3783,6 +3832,31 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryViewSettings(Re
     }
 }
 
+static void WriteColorSetting(const CStringW& subSection, LPCWSTR key, int value) {
+    auto pApp = AfxGetMyApp();
+    if (value != COLOR_SETTING_UNSET) {
+        pApp->WriteProfileInt(subSection, key, value);
+    } else {
+        pApp->WriteProfileStringW(subSection, key, nullptr);
+    }
+}
+
+void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryColorSettings(RecentFileEntry& r) {
+    auto pApp = AfxGetMyApp();
+
+    if (r.hash.IsEmpty()) {
+        r.hash = getRFEHash(r.fns.GetHead());
+    }
+
+    CStringW subSection;
+    subSection.Format(L"%s\\%s", m_section, static_cast<LPCWSTR>(r.hash));
+
+    WriteColorSetting(subSection, L"ColorBrightness", r.colorBrightness);
+    WriteColorSetting(subSection, L"ColorContrast", r.colorContrast);
+    WriteColorSetting(subSection, L"ColorHue", r.colorHue);
+    WriteColorSetting(subSection, L"ColorSaturation", r.colorSaturation);
+}
+
 void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFileEntry& r, bool updateLastOpened /* = false */) {
     auto pApp = AfxGetMyApp();
 
@@ -3882,6 +3956,11 @@ void CAppSettings::CRecentFileListWithMoreInfo::WriteMediaHistoryEntry(RecentFil
     } else {
         pApp->WriteProfileStringW(subSection, L"SubtitleFontScale", nullptr);
     }
+
+    WriteColorSetting(subSection, L"ColorBrightness", r.colorBrightness);
+    WriteColorSetting(subSection, L"ColorContrast", r.colorContrast);
+    WriteColorSetting(subSection, L"ColorHue", r.colorHue);
+    WriteColorSetting(subSection, L"ColorSaturation", r.colorSaturation);
 
     auto now = std::chrono::system_clock::now();
 

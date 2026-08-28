@@ -4634,6 +4634,11 @@ LRESULT CMainFrame::OnFilePostOpenmedia(WPARAM wParam, LPARAM lParam)
         }
     }
 
+    // the per file color settings may have changed the colors while the dialog was open
+    if (s.fKeepHistory && s.bRememberFileColorSettings && m_pColorControls && IsWindow(m_pColorControls->m_hWnd)) {
+        m_pColorControls->UpdateSliders();
+    }
+
     m_bSettingUpMenus = false;
 
     // The device is open now, which is the one precondition DoTunerScan has.
@@ -17161,6 +17166,15 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
                     m_PosY = pMRU->GetCurrentViewSettings(videoPosY, subPicVerticalShift, fontScaleOverride)
                              ? videoPosY : 0.5;
                 }
+                if (s.fKeepHistory && s.bRememberFileColorSettings) {
+                    // Files without stored values keep the current (global) ones.
+                    // SetupVMR9ColorControl() has already run at this point, so the
+                    // renderer has to be updated explicitly. The EVR path is set up
+                    // later, in OnPlayPlay(), and picks these values up on its own.
+                    if (pMRU->GetCurrentColorSettings(s.iBrightness, s.iContrast, s.iHue, s.iSaturation)) {
+                        SetColorControl(ProcAmp_All, s.iBrightness, s.iContrast, s.iHue, s.iSaturation);
+                    }
+                }
                 if (s.fKeepHistory && s.bRememberTrackSelection) {
                     if (m_loadedAudioTrackIndex == -1) {
                         m_loadedAudioTrackIndex = pMRU->GetCurrentAudioTrack();
@@ -21217,6 +21231,9 @@ void CMainFrame::CloseMediaInternal(bool bNextIsQueued/* = false*/, bool bPendin
             if (s.bRememberFileViewSettings) {
                 s.MRU.UpdateCurrentViewSettings(m_PosY, s.m_RenderersSettings.subPicVerticalShift,
                                                 s.m_RenderersSettings.fontScaleOverride);
+            }
+            if (s.bRememberFileColorSettings) {
+                s.MRU.UpdateCurrentColorSettings(s.iBrightness, s.iContrast, s.iHue, s.iSaturation);
             }
             if (m_bRememberFilePos && !m_fEndOfStream && m_pMS) {
                 REFERENCE_TIME rtNow = 0;
