@@ -158,6 +158,7 @@ BEGIN_MESSAGE_MAP(CPPageSheet, CTreePropSheet)
     ON_COMMAND(ID_APPLY_NOW, OnApply)
     ON_WM_CTLCOLOR()
     ON_WM_DRAWITEM()
+    ON_WM_DESTROY()
     ON_MESSAGE(WM_DPICHANGED, OnDpiChanged)
     ON_NOTIFY(TVN_SELCHANGEDA, 0x7EEE, OnPageTreeSelChanged)
     ON_NOTIFY(TVN_SELCHANGEDW, 0x7EEE, OnPageTreeSelChanged)
@@ -185,7 +186,34 @@ BOOL CPPageSheet::OnInitDialog()
 
     fulfillThemeReqs();
     initialized = true;
+
+    // restore the last position of the dialog, its size is calculated by the sheet itself
+    if (!isDummySheet) {
+        CString strPos = AfxGetApp()->GetProfileString(IDS_R_DLG_OPTIONS, IDS_RS_DLG_OPTIONS_POS);
+        CPoint pt;
+        if (_stscanf_s(strPos, _T("%ld,%ld"), &pt.x, &pt.y) == 2) {
+            CRect rc;
+            GetWindowRect(&rc);
+            rc.MoveToXY(pt);
+            if (CMonitors::IsOnScreen(rc)) {
+                SetWindowPos(nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            }
+        }
+    }
     return bResult;
+}
+
+void CPPageSheet::OnDestroy()
+{
+    // remember the position of the dialog for the next time it is opened
+    if (initialized && !isDummySheet) {
+        CRect rc;
+        GetWindowRect(&rc);
+        CString strPos;
+        strPos.Format(_T("%ld,%ld"), rc.left, rc.top);
+        AfxGetApp()->WriteProfileString(IDS_R_DLG_OPTIONS, IDS_RS_DLG_OPTIONS_POS, strPos);
+    }
+    __super::OnDestroy();
 }
 
 void CPPageSheet::OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/)

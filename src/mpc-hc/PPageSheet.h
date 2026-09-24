@@ -146,6 +146,7 @@ protected:
     afx_msg void OnApply();
     afx_msg void OnPageTreeSelChanged(NMHDR* pNMHDR, LRESULT* pResult);
     LRESULT OnDpiChanged(WPARAM wParam, LPARAM lParam);
+    afx_msg void OnDestroy();
 
     virtual TreePropSheet::CPropPageFrame* CreatePageFrame();
 public:

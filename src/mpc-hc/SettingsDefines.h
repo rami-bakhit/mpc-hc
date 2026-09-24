@@ -393,6 +393,8 @@
 #define IDS_RS_DLG_HISTORY_COLWIDTH         _T("ColWidth")
 
 #define IDS_R_DLG_COLOR_CONTROLS            _T("Dialogs\\ColorControls")
+#define IDS_R_DLG_OPTIONS                   _T("Dialogs\\Options")
+#define IDS_RS_DLG_OPTIONS_POS              _T("WindowPosition")
 
 #define IDS_R_SHADERS                       _T("Shaders")
 #define IDS_RS_SHADERS_EXTRA                _T("Extra")
