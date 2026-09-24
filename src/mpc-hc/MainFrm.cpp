@@ -858,6 +858,7 @@ CMainFrame::CMainFrame()
     , m_iReloadAudioIdx(-1)
     , m_iReloadSubIdx(-1)
     , m_bRememberFilePos(false)
+    , m_bSubtitlePosAndSizeSet(false)
     , m_dwLastRun(0)
     , m_nLastAppendSelectionIndex(0)
     , m_bBuffering(false)
@@ -16962,6 +16963,7 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
     m_fValidDVDOpen = false;
     m_iDefRotation = 0;
     m_replayGain = ReplayGainInfo();
+    m_bSubtitlePosAndSizeSet = false;
 
     OpenFileData* pFileData = dynamic_cast<OpenFileData*>(pOMD.m_p);
     OpenDVDData* pDVDData = dynamic_cast<OpenDVDData*>(pOMD.m_p);
@@ -19646,8 +19648,12 @@ void CMainFrame::SetSubtitle(const SubtitleInput& subInput, bool skip_lcid /* = 
     TRACE(_T("CMainFrame::SetSubtitle\n"));
 
     CAppSettings& s = AfxGetAppSettings();
-    ResetSubtitlePosAndSize(false);
-    ApplyRememberedSubtitlePosAndSize();
+    // optionally keep the subtitle position and size when the subtitles of the same file change
+    if (!s.bKeepSubtitlePosAndSize || !m_bSubtitlePosAndSizeSet) {
+        ResetSubtitlePosAndSize(false);
+        ApplyRememberedSubtitlePosAndSize();
+        m_bSubtitlePosAndSizeSet = true;
+    }
 
     ResetAutoCopySubtitle();
 
@@ -19831,7 +19837,9 @@ void CMainFrame::ReloadSubtitle()
         }
     }
 
-    ResetSubtitlePosAndSize(false);
+    if (!AfxGetAppSettings().bKeepSubtitlePosAndSize || !m_bSubtitlePosAndSizeSet) {
+        ResetSubtitlePosAndSize(false);
+    }
 
     SetSubtitle(0, true);
     m_wndSubresyncBar.ReloadSubtitle();

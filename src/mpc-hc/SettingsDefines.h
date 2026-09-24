@@ -141,6 +141,7 @@
 #define IDS_RS_REMEMBER_FILE_VIEW_SETTINGS  _T("RememberFileViewSettings")
 #define IDS_RS_REMEMBER_FILE_COLOR_SETTINGS _T("RememberFileColorSettings")
 #define IDS_RS_INHERIT_SETTINGS_FROM_FOLDER _T("InheritSettingsFromFolder")
+#define IDS_RS_KEEP_SUBTITLE_POS_AND_SIZE   _T("KeepSubtitlePosAndSize")
 #define IDS_RS_CUSTOM_PRESET_CONTROLSTATE   _T("CustomPresetControlState")
 #define IDS_RS_CUSTOM_PRESET_CAPTION        _T("CustomPresetCaption")
 #define IDS_RS_STARTUP_PRESET               _T("StartupPreset")

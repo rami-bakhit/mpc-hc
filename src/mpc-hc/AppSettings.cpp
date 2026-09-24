@@ -219,6 +219,7 @@ CAppSettings::CAppSettings()
     , bRememberFileViewSettings(false)
     , bRememberFileColorSettings(false)
     , bInheritSettingsFromFolder(false)
+    , bKeepSubtitlePosAndSize(false)
     , nOSDSize(0)
     , bHideWindowedMousePointer(true)
     , iBrightness(0)
@@ -1149,6 +1150,7 @@ void CAppSettings::SaveSettings(bool write_full_history /* = false */)
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, bRememberFileViewSettings);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, bRememberFileColorSettings);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_INHERIT_SETTINGS_FROM_FOLDER, bInheritSettingsFromFolder);
+    pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_KEEP_SUBTITLE_POS_AND_SIZE, bKeepSubtitlePosAndSize);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, nCustomPresetControlState);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, nCustomPresetCaption);
     pApp->WriteProfileInt(IDS_R_SETTINGS, IDS_RS_STARTUP_PRESET, nStartupPreset);
@@ -1801,6 +1803,7 @@ void CAppSettings::LoadSettings()
     bRememberFileViewSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, FALSE);
     bRememberFileColorSettings = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, FALSE);
     bInheritSettingsFromFolder = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_INHERIT_SETTINGS_FROM_FOLDER, FALSE);
+    bKeepSubtitlePosAndSize = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_KEEP_SUBTITLE_POS_AND_SIZE, FALSE);
     nCustomPresetControlState = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CONTROLSTATE, CS_SEEKBAR | CS_TOOLBAR);
     nCustomPresetControlState &= (CS_SEEKBAR | CS_TOOLBAR | CS_INFOBAR | CS_STATSBAR | CS_STATUSBAR); // drop invalid bits
     nCustomPresetCaption = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_CUSTOM_PRESET_CAPTION, MODE_HIDEMENU);

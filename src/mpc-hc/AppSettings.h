@@ -929,6 +929,7 @@ public:
     bool            bRememberFileViewSettings;
     bool            bRememberFileColorSettings;
     bool            bInheritSettingsFromFolder;
+    bool            bKeepSubtitlePosAndSize;
     CString         strOSDFont;
     int             nOSDSize;
     bool            bHideWindowedMousePointer;

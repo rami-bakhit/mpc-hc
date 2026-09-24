@@ -160,6 +160,7 @@ void CPPageAdvanced::InitSettings()
     addBoolItem(REMEMBER_FILE_VIEW_SETTINGS, IDS_RS_REMEMBER_FILE_VIEW_SETTINGS, false, s.bRememberFileViewSettings, L"Remember the vertical image position, the subtitle position and the subtitle size for each file in the history.");
     addBoolItem(REMEMBER_FILE_COLOR_SETTINGS, IDS_RS_REMEMBER_FILE_COLOR_SETTINGS, false, s.bRememberFileColorSettings, L"Remember the brightness, contrast, hue and saturation settings for each file in the history.");
     addBoolItem(INHERIT_SETTINGS_FROM_FOLDER, IDS_RS_INHERIT_SETTINGS_FROM_FOLDER, false, s.bInheritSettingsFromFolder, L"Let a file without remembered settings of its own start with those of the most recently played file from the same folder. Requires the options above.");
+    addBoolItem(KEEP_SUBTITLE_POS_AND_SIZE, IDS_RS_KEEP_SUBTITLE_POS_AND_SIZE, false, s.bKeepSubtitlePosAndSize, L"When other subtitles are selected, loaded or downloaded for the same file, keep the current subtitle position and size instead of resetting them.");
     addIntItem(COVER_SIZE_LIMIT, IDS_RS_COVER_ART_SIZE_LIMIT, 600, s.nCoverArtSizeLimit, std::make_pair(0, INT_MAX), StrRes(IDS_PPAGEADVANCED_COVER_SIZE_LIMIT));
     addBoolItem(OPEN_REC_PANEL_WHEN_OPENING_DEVICE, IDS_RS_OPEN_REC_PANEL_WHEN_OPENING_DEVICE, true, s.bOpenRecPanelWhenOpeningDevice, StrRes(IDS_PPAGEADVANCED_OPEN_REC_PANEL_WHEN_OPENING_DEVICE));
     addBoolItem(CONFIRM_FILE_DELETE, IDS_RS_CONFIRM_FILE_DELETE, true, s.bConfirmFileDelete, StrRes(IDS_PPAGEADVANCED_CONFIRM_FILE_DELETE));

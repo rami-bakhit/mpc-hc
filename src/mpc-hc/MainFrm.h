@@ -488,6 +488,7 @@ private:
     int m_iReloadSubIdx;
 
     bool m_bRememberFilePos;
+    bool m_bSubtitlePosAndSizeSet; // set once the subtitle position and size have been initialized for the current file
 
     ULONGLONG m_dwLastRun;
     int m_nLastAppendSelectionIndex; // playlist index where the current batch of redirected opens started
