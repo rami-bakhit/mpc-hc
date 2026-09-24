@@ -4892,6 +4892,12 @@ void CMainFrame::ToolbarContextMenu(int iItem, int nIndex, CRect buttonRect) {
     } else if (iItem == ID_SUBTITLES) {
         SetupSubtitlesSubMenu();
         subMenu = &m_subtitlesMenu;
+        // the toolbar button also offers loading and downloading subtitles
+        if (subMenu->GetMenuItemCount() > 0) {
+            VERIFY(subMenu->AppendMenu(MF_SEPARATOR));
+        }
+        VERIFY(subMenu->AppendMenu(MF_STRING | MF_ENABLED, ID_FILE_SUBTITLES_LOAD, ResStr(IDS_AG_LOAD_SUBTITLES)));
+        VERIFY(subMenu->AppendMenu(MF_STRING | MF_ENABLED, ID_FILE_SUBTITLES_DOWNLOAD, ResStr(IDS_SUBTITLES_DOWNLOAD)));
     } else if (iItem == ID_MENU_FILTERS) {
         SetupFiltersSubMenu();
         subMenu = &m_filtersMenu;
@@ -4920,7 +4926,8 @@ void CMainFrame::OnUpdateAudiosButton(CCmdUI* pCmdUI) {
 }
 
 void CMainFrame::OnUpdateSubtitlesButton(CCmdUI* pCmdUI) {
-    pCmdUI->Enable(IsStateLoaded() && m_subtitlesMenu.GetMenuItemCount() > 0);
+    bool bCanLoadSubtitles = !m_fAudioOnly && (m_pCAP || m_pDVS) && !IsPlaybackCaptureMode();
+    pCmdUI->Enable(IsStateLoaded() && (m_subtitlesMenu.GetMenuItemCount() > 0 || bCanLoadSubtitles));
 }
 
 void CMainFrame::OnStreamAudio(UINT nID)
