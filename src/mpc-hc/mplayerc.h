@@ -48,7 +48,7 @@
 #define MPC_RECOVERY_MUTEX_NAME L"MediaPlayerClassicW_RedirectRecovery"
 
 // define the default logo we use
-#define DEF_LOGO IDF_LOGO3
+#define DEF_LOGO IDF_LOGO_KELPIE
 
 #define MIN_MODERN_SEEKBAR_HEIGHT 8
 #define DEF_MODERN_SEEKBAR_HEIGHT 16

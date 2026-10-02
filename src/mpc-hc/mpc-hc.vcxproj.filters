@@ -1499,6 +1499,9 @@
     <Image Include="res\logo.4_x64.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\logo.kelpie.png">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="res\darktheme\checkboxes-96.png">
       <Filter>MPCTheme\resources</Filter>
     </Image>

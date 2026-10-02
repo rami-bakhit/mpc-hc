@@ -41,3 +41,7 @@ New options are located in Options > Advanced and are disabled by default.
 ### Changed
 
 - The program icon is replaced with the MPC-Kelpie icon (2026-10-02).
+- The MPC-Kelpie logo is the default logo shown when no file is open. The
+  upstream logos remain available in Options > Player > Logo. Without a
+  remembered window size, the player starts with a 960x540 video area, the
+  size of the logo (2026-10-02).
