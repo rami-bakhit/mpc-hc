@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="kelpie-logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="kelpie-logo-light.png">
+    <img alt="MPC-Kelpie logo" src="kelpie-logo-light.png" width="180">
+  </picture>
+</p>
+
 # MPC-Kelpie
 
 MPC-Kelpie is a fork of [MPC-HC](https://github.com/clsid2/mpc-hc) with a few
