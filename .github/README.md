@@ -39,6 +39,16 @@ Per-file settings are stored as part of the recent files history.
 
 See [CHANGELOG.md](../CHANGELOG.md) for a dated list of changes.
 
+## Using multiple monitors
+
+The Options dialog remembers its position, as the Color Controls and
+subtitle search dialogs already do in MPC-HC. On a system with more than
+one monitor, these dialogs can be kept on a second monitor while the video
+plays on the first. Together with "Download Subtitles..." in the subtitles
+toolbar button menu, subtitles can be searched for without going through
+the main menu. If the monitor where the Options dialog was last closed is
+not available, the dialog opens centered on the monitor with the player.
+
 ## Relationship to MPC-HC
 
 MPC-Kelpie is based on the `develop` branch of
