@@ -18,6 +18,7 @@ disabled, the player behaves the same as the upstream version it is based on.
   toolbar button. The button is also enabled when the open video has no
   subtitles.
 - The Options dialog opens at the position where it was last closed.
+- MPC-Kelpie program icon.
 
 The following options are available in Options > Advanced:
 
