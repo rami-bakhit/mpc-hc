@@ -45,3 +45,6 @@ New options are located in Options > Advanced and are disabled by default.
   upstream logos remain available in Options > Player > Logo. Without a
   remembered window size, the player starts with a 960x540 video area, the
   size of the logo (2026-10-02).
+- The window title shows "MPC-Kelpie" instead of "Media Player Classic Home
+  Cinema" when no file is open. File associations registered by the player
+  use the same name as the application name (2026-10-02).

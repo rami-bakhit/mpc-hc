@@ -21,6 +21,7 @@ disabled, the player behaves the same as the upstream version it is based on.
 - MPC-Kelpie program icon.
 - MPC-Kelpie logo in the player window when no file is open
   (Options > Player > Logo).
+- "MPC-Kelpie" in the window title when no file is open.
 
 The following options are available in Options > Advanced:
 
