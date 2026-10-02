@@ -894,6 +894,7 @@ public:
     int             iModernSeekbarHeight;
 
     CMPCTheme::ModernThemeMode eModernThemeMode;
+    int             iModernThemeStyle;
 
     int             iFullscreenDelay;
 
@@ -1085,6 +1086,7 @@ public:
     int iRedirectOpenToAppendThreshold;
     bool bFullscreenSeparateControls;
     bool bAlwaysUseShortMenu;
+    bool bWin11NativeMenus;
     int iStillVideoDuration;
     int iMouseLeftUpDelay;
 
@@ -1148,6 +1150,8 @@ public:
     static std::multimap<CStringW, CStringW> LoadHistoryHashes(CStringW section, CStringW dateField);
     static void     PurgeExpiredHash(CStringW section, CStringW hash);
     void            LoadSettings();
+    void            ReadWindowsColorSettings();
+    void            UpdateThemeState();
     void            SaveExternalFilters() {
         if (bInitialized) {
             SaveExternalFilters(m_filters);
