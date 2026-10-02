@@ -64,7 +64,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Lite|Win32'">$(SolutionDir)bin\mpc-hc_x86 Lite\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)bin\mpc-hc_x64\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release Lite|x64'">$(SolutionDir)bin\mpc-hc_x64 Lite\</OutDir>
-    <TargetName Condition="'$(Platform)'=='x64'">$(ProjectName)64</TargetName>
+    <TargetName Condition="'$(Platform)'=='Win32'">mpc-kelpie</TargetName>
+    <TargetName Condition="'$(Platform)'=='x64'">mpc-kelpie64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ResourceCompile>

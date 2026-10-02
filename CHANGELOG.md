@@ -48,3 +48,8 @@ New options are located in Options > Advanced and are disabled by default.
 - The window title shows "MPC-Kelpie" instead of "Media Player Classic Home
   Cinema" when no file is open. File associations registered by the player
   use the same name as the application name (2026-10-02).
+- The executable is renamed to `mpc-kelpie64.exe` (`mpc-kelpie.exe` for
+  32-bit builds). In portable mode the settings files follow the new name,
+  so `mpc-hc64.ini` and `mpc-hc64.history.ini` have to be renamed to
+  `mpc-kelpie64.ini` and `mpc-kelpie64.history.ini`. File associations made
+  with the old executable have to be registered again (2026-10-02).
