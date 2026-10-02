@@ -66,8 +66,8 @@
 
 #ifdef x64Build
   #define bindir        = AddBackslash(base_bindir) + "mpc-hc_x64"
-  #define mpchc_exe     = "mpc-hc64.exe"
-  #define mpchc_ini     = "mpc-hc64.ini"
+  #define mpchc_exe     = "mpc-kelpie64.exe"
+  #define mpchc_ini     = "mpc-kelpie64.ini"
   #define lavfiltersdir = "LAVFilters64"
   #define OutFilename   = app_name + "." + app_ver + ".x64"
   #define platform      = "x64"
@@ -75,8 +75,8 @@
   #define mediainfo_dll = "..\distrib\x64\MediaInfo.dll"
 #else
   #define bindir        = AddBackslash(base_bindir) + "mpc-hc_x86"
-  #define mpchc_exe     = "mpc-hc.exe"
-  #define mpchc_ini     = "mpc-hc.ini"
+  #define mpchc_exe     = "mpc-kelpie.exe"
+  #define mpchc_ini     = "mpc-kelpie.ini"
   #define lavfiltersdir = "LAVFilters"
   #define OutFilename   = app_name + "." + app_ver + ".x86"
   #define platform      = "x86"

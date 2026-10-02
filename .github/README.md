@@ -22,6 +22,7 @@ disabled, the player behaves the same as the upstream version it is based on.
 - MPC-Kelpie logo in the player window when no file is open
   (Options > Player > Logo).
 - "MPC-Kelpie" in the window title when no file is open.
+- The executable is named `mpc-kelpie64.exe`.
 
 The following options are available in Options > Advanced:
 
@@ -64,7 +65,7 @@ MPC-HC stores its settings in the Windows registry under the same key for
 every build, so MPC-Kelpie and an installed MPC-HC would overwrite each
 other's settings. To keep them separate, run MPC-Kelpie in portable mode by
 placing an `.ini` file with the same name as the executable in the same
-folder, for example `mpc-hc64.ini` next to `mpc-hc64.exe`.
+folder, for example `mpc-kelpie64.ini` next to `mpc-kelpie64.exe`.
 
 ## Building
 
