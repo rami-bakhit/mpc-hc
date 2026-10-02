@@ -37,3 +37,7 @@ Based on [clsid2/mpc-hc](https://github.com/clsid2/mpc-hc) `develop` at
   (2026-09-24).
 
 New options are located in Options > Advanced and are disabled by default.
+
+### Changed
+
+- The program icon is replaced with the MPC-Kelpie icon (2026-10-02).
