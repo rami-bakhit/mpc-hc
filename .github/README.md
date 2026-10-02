@@ -19,6 +19,8 @@ disabled, the player behaves the same as the upstream version it is based on.
   subtitles.
 - The Options dialog opens at the position where it was last closed.
 - MPC-Kelpie program icon.
+- MPC-Kelpie logo in the player window when no file is open
+  (Options > Player > Logo).
 
 The following options are available in Options > Advanced:
 

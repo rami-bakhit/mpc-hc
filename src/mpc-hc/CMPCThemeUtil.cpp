@@ -1108,7 +1108,7 @@ bool CMPCThemeUtil::IsBasicMode()
 
 UINT CMPCThemeUtil::defaultLogo()
 {
-    return IDF_LOGO4;
+    return IDF_LOGO_KELPIE;
 }
 
 struct AFX_CTLCOLOR {

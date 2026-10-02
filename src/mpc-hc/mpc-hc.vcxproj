@@ -852,6 +852,7 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <Image Include="res\darktheme\radios-96.png" />
     <Image Include="res\logo.4.png" />
     <Image Include="res\logo.4_x64.png" />
+    <Image Include="res\logo.kelpie.png" />
     <Image Include="res\noimage.png" />
     <Image Include="res\uncheck_all.bmp" />
   </ItemGroup>

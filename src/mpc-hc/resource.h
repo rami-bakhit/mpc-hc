@@ -796,6 +796,7 @@
 #define ID_VIEW_MPCTHEME                24045
 #define PLAYER_PLAYLIST_UPDATE_SCROLLBAR 24048
 #define IDF_LOGO4                       24050
+#define IDF_LOGO_KELPIE                 24900
 #define ID_SUBTITLES_OVERRIDE_DEFAULT_STYLE 24051
 #define ID_SUB_POS_DOWN                 24052
 #define ID_SUB_POS_UP                   24053

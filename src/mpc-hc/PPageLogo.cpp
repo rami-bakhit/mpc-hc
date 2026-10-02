@@ -41,6 +41,7 @@ CPPageLogo::CPPageLogo()
     m_logoids.AddTail(IDF_LOGO2);
     m_logoids.AddTail(IDF_LOGO3);
     m_logoids.AddTail(IDF_LOGO4);
+    m_logoids.AddTail(IDF_LOGO_KELPIE);
     m_logoidpos = m_logoids.GetHeadPosition();
 }
 
