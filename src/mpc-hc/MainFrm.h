@@ -541,7 +541,9 @@ private:
     CString MakeSnapshotFileName(BOOL thumbnails);
     BOOL IsRendererCompatibleWithSaveImage();
     void SaveImage(LPCTSTR fn, bool displayed, bool includeSubtitles);
-    void SaveThumbnails(LPCTSTR fn);
+    // False when no sheet was written, including the failures that report
+    // nothing at all. A headless /thumbnails run exits non-zero on it.
+    bool SaveThumbnails(LPCTSTR fn);
 
     //
 
@@ -665,6 +667,7 @@ protected:
     bool m_bFirstPlay;
     bool m_bOpeningInAutochangedMonitorMode;
     bool m_bPausedForAutochangeMonitorMode;
+    bool m_bThemeChangePending;
     bool restoringWindowRect;
 
     bool m_fAudioOnly;
@@ -709,7 +712,7 @@ protected:
     void OpenSetupVideo();
     void OpenSetupAudio();
     void OpenSetupInfoBar(bool bClear = true);
-    void UpdateChapterInInfoBar();
+    bool UpdateChapterInInfoBar(bool bRecalcLayout = true);
     void OpenSetupStatsBar();
     void CheckSelectedAudioStream();
     void CheckSelectedVideoStream();
@@ -1457,6 +1460,7 @@ protected:
     void ClearArtFromViews();
 
     void UpdateUILanguage();
+    void ApplyThemeChange();
 
     bool PerformFlipRotate();
 

@@ -24,6 +24,7 @@
 #include "MainFrm.h"
 #include "EventDispatcher.h"
 #include <strsafe.h>
+#include "VersionHelpersInternal.h"
 #include "CrashReporter.h"
 #include "ExceptionHandler.h"
 
@@ -32,6 +33,7 @@ IMPLEMENT_DYNAMIC(CPPageAdvanced, CMPCThemePPageBase)
 CPPageAdvanced::CPPageAdvanced()
     : CMPCThemePPageBase(IDD, IDD)
 {
+    GetEventd().Connect(m_eventc, { MpcEvent::CHANGING_THEME });
 }
 
 void CPPageAdvanced::DoDataExchange(CDataExchange* pDX)
@@ -154,6 +156,12 @@ void CPPageAdvanced::InitSettings()
         { StrRes(IDS_STARTUP_PRESET_REMEMBER), StrRes(IDS_AG_VIEW_MINIMAL), StrRes(IDS_AG_VIEW_COMPACT), StrRes(IDS_AG_VIEW_NORMAL), StrRes(IDS_AG_VIEW_CUSTOM) },
         StrRes(IDS_PPAGEADVANCED_STARTUP_PRESET));
     addBoolItem(ALWAYS_USE_SHORT_MENU, IDS_RS_ALWAYS_USE_SHORT_MENU, false, s.bAlwaysUseShortMenu, StrRes(IDS_PPAGEADVANCED_ALWAYS_USE_SHORT_MENU));
+    if (IsWindowsVersionOrGreaterBuild(10, 0, 22000)) { //native menus are windows 11 only
+        addBoolItem(WIN11_NATIVE_MENUS, IDS_RS_WIN11_NATIVE_MENUS, false, s.bWin11NativeMenus, StrRes(IDS_PPAGEADVANCED_WIN11_NATIVE_MENUS));
+    }
+    addComboItem(MODERN_THEME_STYLE, IDS_RS_MODERNTHEMESTYLE, static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT), s.iModernThemeStyle,
+        { StrRes(IDS_MODERN_THEME_STYLE_FOLLOW_OS), StrRes(IDS_MODERN_THEME_STYLE_WINDOWS10), StrRes(IDS_MODERN_THEME_STYLE_WINDOWS11) },
+        StrRes(IDS_PPAGEADVANCED_MODERN_THEME_STYLE));
     addIntItem(MOUSE_LEFTUP_DELAY, IDS_RS_MOUSE_LEFTUP_DELAY, 0, s.iMouseLeftUpDelay, std::make_pair(0, 1000), StrRes(IDS_PPAGEADVANCED_MOUSE_LEFTUP_DELAY));
     addBoolItem(MOUSE_DRAG_PAN_VIDEO, IDS_RS_MOUSE_DRAG_PAN_VIDEO, false, s.bMouseDragPanVideo, L"Pan the video image vertically by pressing the left mouse button and moving the mouse. Only active in fullscreen mode.");
     addBoolItem(MOUSE_DRAG_SUBTITLES, IDS_RS_MOUSE_DRAG_SUBTITLES, false, s.bMouseDragSubtitles, L"Move the subtitles vertically by pressing the left mouse button on them and moving the mouse. Only active in fullscreen mode.");
@@ -312,6 +320,8 @@ BOOL CPPageAdvanced::OnApply()
 {
     auto& s = AfxGetAppSettings();
     int oldHistoryMaxAgeDays = s.iHistoryMaxAgeDays;
+    int oldModernThemeStyle = s.iModernThemeStyle;
+    bool oldWin11NativeMenus = s.bWin11NativeMenus;
 
     for (int i = 0; i < m_list.GetItemCount(); i++) {
         if (IsHeaderRow(i)) {
@@ -325,6 +335,9 @@ BOOL CPPageAdvanced::OnApply()
     if (s.iHistoryMaxAgeDays != oldHistoryMaxAgeDays && s.iHistoryMaxAgeDays > 0) {
         s.MRU.rfe_last_added = 0; // force reload so the new age limit is applied immediately
         s.MRU.ReadMediaHistory();
+    }
+    if (s.iModernThemeStyle != oldModernThemeStyle || s.bWin11NativeMenus != oldWin11NativeMenus) {
+        m_eventc.FireEvent(MpcEvent::CHANGING_THEME);
     }
 
 #if !defined(_DEBUG) && USE_DRDUMP_CRASH_REPORTER
