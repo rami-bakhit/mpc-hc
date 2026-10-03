@@ -53,3 +53,6 @@ New options are located in Options > Advanced and are disabled by default.
   so `mpc-hc64.ini` and `mpc-hc64.history.ini` have to be renamed to
   `mpc-kelpie64.ini` and `mpc-kelpie64.history.ini`. File associations made
   with the old executable have to be registered again (2026-10-02).
+- MPC-Kelpie uses its own settings registry key, AppData folder, window class
+  and file association names, so it no longer shares them with MPC-HC.
+  Settings are not imported from MPC-HC (2026-10-03).

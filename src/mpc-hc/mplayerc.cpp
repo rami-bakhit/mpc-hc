@@ -1009,7 +1009,7 @@ void CMPlayerCApp::ImportHKLMTree(HKEY hKey, const CStringW& section)
 void CMPlayerCApp::ApplyHKLMDefaults()
 {
     HKEY hRoot;
-    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, _T("Software\\MPC-HC"), 0, KEY_READ, &hRoot) != ERROR_SUCCESS) {
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, _T("Software\\MPC-Kelpie"), 0, KEY_READ, &hRoot) != ERROR_SUCCESS) {
         return; // no machine-wide defaults configured
     }
 
@@ -1156,7 +1156,7 @@ bool CMPlayerCApp::GetAppDataPath(CString& path)
         return false;
     }
     CLongPath p;
-    p.Combine(path, _T("MPC-HC"));
+    p.Combine(path, _T("MPC-Kelpie"));
     path = (LPCTSTR)p;
 
     return true;
@@ -2079,7 +2079,7 @@ BOOL CMPlayerCApp::InitInstance()
     // At this point we have not hooked this function yet so we get the real result
     if (!IsDebuggerPresent()) {
 #if !defined(_DEBUG) && USE_DRDUMP_CRASH_REPORTER
-        if (RegQueryBoolValue(HKEY_CURRENT_USER, _T("Software\\MPC-HC\\MPC-HC\\Settings"), _T("EnableCrashReporter"), true)) {
+        if (RegQueryBoolValue(HKEY_CURRENT_USER, _T("Software\\MPC-Kelpie\\MPC-Kelpie\\Settings"), _T("EnableCrashReporter"), true)) {
             CrashReporter::Enable();
             if (!CrashReporter::IsEnabled()) {
                 MPCExceptionHandler::Enable();
@@ -2359,7 +2359,7 @@ BOOL CMPlayerCApp::InitInstance()
 
     if (!IsIniValid()) {
         CRegKey key;
-        if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, _T("Software\\MPC-HC\\MPC-HC"))) {
+        if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, _T("Software\\MPC-Kelpie\\MPC-Kelpie"))) {
             if (RegQueryValueEx(key, _T("ExePath"), 0, nullptr, nullptr, nullptr) != ERROR_SUCCESS) { // First launch
                 // Move registry settings from the old to the new location
                 CRegKey oldKey;
