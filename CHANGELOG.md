@@ -54,3 +54,6 @@ New options are located in Options > Advanced and are disabled by default.
 - The About dialog, the file properties and the player's messages show the
   name MPC-Kelpie, and the About dialog links to this repository and notes
   that MPC-Kelpie is a modified version of MPC-HC (2026-10-03).
+- The update check looks for new MPC-Kelpie releases in this repository
+  instead of MPC-HC releases and runs every 30 days by default instead of
+  every 7 days (2026-10-03).
