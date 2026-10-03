@@ -79,11 +79,11 @@ Builds are 64-bit (x64) only.
 
 ## Running alongside MPC-HC
 
-MPC-HC stores its settings in the Windows registry under the same key for
-every build, so MPC-Kelpie and an installed MPC-HC would overwrite each
-other's settings. To keep them separate, run MPC-Kelpie in portable mode by
-placing an `.ini` file with the same name as the executable in the same
-folder, for example `mpc-kelpie64.ini` next to `mpc-kelpie64.exe`.
+MPC-Kelpie uses its own settings, window and file associations, so it can be
+installed and used next to MPC-HC. Settings are not imported from MPC-HC.
+
+For portable use, place an `.ini` file with the same name as the executable in
+the same folder, for example `mpc-kelpie64.ini` next to `mpc-kelpie64.exe`.
 
 ## Building
 

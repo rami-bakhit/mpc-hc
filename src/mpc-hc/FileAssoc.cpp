@@ -31,9 +31,9 @@
 // TODO: change this along with the root key for settings and the mutex name to
 //       avoid possible risks of conflict with the old MPC (non HC version).
 #ifdef _WIN64
-#define PROGID _T("mplayerc64")
+#define PROGID _T("MPCKelpie64")
 #else
-#define PROGID _T("mplayerc")
+#define PROGID _T("MPCKelpie")
 #endif // _WIN64
 
 CFileAssoc::IconLib::IconLib(GetIconIndexFunc fnGetIconIndex, GetIconLibVersionFunc fnGetIconLibVersion, HMODULE hLib)
@@ -73,10 +73,10 @@ static CString ClsidToString(const CLSID& clsid)
 
 CFileAssoc::CFileAssoc()
     : m_iconLibPath(PathUtils::CombinePaths(PathUtils::GetProgramPath(), _T("mpciconlib.dll")))
-    , m_strRegisteredAppName(_T("Media Player Classic"))
+    , m_strRegisteredAppName(_T("MPC-Kelpie"))
     , m_strOldAssocKey(_T("PreviousRegistration"))
-    , m_strRegisteredAppKey(_T("Software\\Clients\\Media\\Media Player Classic\\Capabilities"))
-    , m_strRegAppFileAssocKey(_T("Software\\Clients\\Media\\Media Player Classic\\Capabilities\\FileAssociations"))
+    , m_strRegisteredAppKey(_T("Software\\Clients\\Media\\MPC-Kelpie\\Capabilities"))
+    , m_strRegAppFileAssocKey(_T("Software\\Clients\\Media\\MPC-Kelpie\\Capabilities\\FileAssociations"))
     , m_strOpenCommand(_T("\"") + PathUtils::GetProgramPath(true) + _T("\" \"%1\""))
     , m_strEnqueueCommand(_T("\"") + PathUtils::GetProgramPath(true) + _T("\" /add \"%1\""))
     , m_strPlayClsid(ClsidToString(CLSID_MPCHCDropTargetPlay))
@@ -159,7 +159,7 @@ bool CFileAssoc::RegisterApp()
         CRegKey key;
 
         if (ERROR_SUCCESS == key.Open(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\RegisteredApplications"))) {
-            key.SetStringValue(_T("Media Player Classic"), m_strRegisteredAppKey);
+            key.SetStringValue(_T("MPC-Kelpie"), m_strRegisteredAppKey);
 
             if (ERROR_SUCCESS == key.Create(HKEY_LOCAL_MACHINE, m_strRegisteredAppKey)) {
                 // ==>>  TODO icon !!!
@@ -185,8 +185,8 @@ bool CFileAssoc::RegisterDropTargetServer()
         const CString& strClsid;
         LPCTSTR strName;
     } classes[] = {
-        { m_strPlayClsid, _T("MPC-HC Play") },
-        { m_strEnqueueClsid, _T("MPC-HC Add to playlist") },
+        { m_strPlayClsid, _T("MPC-Kelpie Play") },
+        { m_strEnqueueClsid, _T("MPC-Kelpie Add to playlist") },
     };
 
     for (const auto& cls : classes) {
@@ -543,25 +543,25 @@ bool CFileAssoc::RegisterAutoPlay(autoplay_t ap, bool bRegister)
     CRegKey key;
 
     if (bRegister) {
-        if (ERROR_SUCCESS != key.Create(HKEY_CLASSES_ROOT, _T("MediaPlayerClassic.Autorun"))) {
+        if (ERROR_SUCCESS != key.Create(HKEY_CLASSES_ROOT, _T("MPCKelpie.Autorun"))) {
             return false;
         }
         key.Close();
 
         if (ERROR_SUCCESS != key.Create(HKEY_CLASSES_ROOT,
-                                        _T("MediaPlayerClassic.Autorun\\Shell\\Play") + m_handlers[i].verb + _T("\\Command"))) {
+                                        _T("MPCKelpie.Autorun\\Shell\\Play") + m_handlers[i].verb + _T("\\Command"))) {
             return false;
         }
         key.SetStringValue(nullptr, _T("\"") + exe + _T("\"") + m_handlers[i].cmd);
         key.Close();
 
         if (ERROR_SUCCESS != key.Create(HKEY_LOCAL_MACHINE,
-                                        _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AutoplayHandlers\\Handlers\\MPCPlay") + m_handlers[i].verb + _T("OnArrival"))) {
+                                        _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AutoplayHandlers\\Handlers\\MPCKelpiePlay") + m_handlers[i].verb + _T("OnArrival"))) {
             return false;
         }
         key.SetStringValue(_T("Action"), ResStr(m_handlers[i].action));
-        key.SetStringValue(_T("Provider"), _T("Media Player Classic"));
-        key.SetStringValue(_T("InvokeProgID"), _T("MediaPlayerClassic.Autorun"));
+        key.SetStringValue(_T("Provider"), _T("MPC-Kelpie"));
+        key.SetStringValue(_T("InvokeProgID"), _T("MPCKelpie.Autorun"));
         key.SetStringValue(_T("InvokeVerb"), _T("Play") + m_handlers[i].verb);
         key.SetStringValue(_T("DefaultIcon"), exe + _T(",0"));
         key.Close();
@@ -570,14 +570,14 @@ bool CFileAssoc::RegisterAutoPlay(autoplay_t ap, bool bRegister)
                                         _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AutoplayHandlers\\EventHandlers\\Play") + m_handlers[i].verb + _T("OnArrival"))) {
             return false;
         }
-        key.SetStringValue(_T("MPCPlay") + m_handlers[i].verb + _T("OnArrival"), _T(""));
+        key.SetStringValue(_T("MPCKelpiePlay") + m_handlers[i].verb + _T("OnArrival"), _T(""));
         key.Close();
     } else {
         if (ERROR_SUCCESS != key.Create(HKEY_LOCAL_MACHINE,
                                         _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AutoplayHandlers\\EventHandlers\\Play") + m_handlers[i].verb + _T("OnArrival"))) {
             return false;
         }
-        key.DeleteValue(_T("MPCPlay") + m_handlers[i].verb + _T("OnArrival"));
+        key.DeleteValue(_T("MPCKelpiePlay") + m_handlers[i].verb + _T("OnArrival"));
         key.Close();
     }
 
@@ -603,13 +603,13 @@ bool CFileAssoc::IsAutoPlayRegistered(autoplay_t ap) const
         return false;
     }
     len = _countof(buff);
-    if (ERROR_SUCCESS != key.QueryStringValue(_T("MPCPlay") + m_handlers[i].verb + _T("OnArrival"), buff, &len)) {
+    if (ERROR_SUCCESS != key.QueryStringValue(_T("MPCKelpiePlay") + m_handlers[i].verb + _T("OnArrival"), buff, &len)) {
         return false;
     }
     key.Close();
 
     if (ERROR_SUCCESS != key.Open(HKEY_CLASSES_ROOT,
-                                  _T("MediaPlayerClassic.Autorun\\Shell\\Play") + m_handlers[i].verb + _T("\\Command"),
+                                  _T("MPCKelpie.Autorun\\Shell\\Play") + m_handlers[i].verb + _T("\\Command"),
                                   KEY_READ)) {
         return false;
     }
