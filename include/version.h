@@ -56,7 +56,7 @@
 #define MPC_NIGHTLY_RELEASE     0
 #endif
 
-#define MPC_COMP_NAME_STR       _T("MPC-HC Team")
+#define MPC_COMP_NAME_STR       _T("MPC-Kelpie")
 #define MPC_COPYRIGHT_STR       _T("Copyright 2002-2026 clsid2 and others")
 #define MPC_VERSION_COMMENTS    WEBSITE_URL
 

@@ -57,3 +57,7 @@ New options are located in Options > Advanced and are disabled by default.
 - The update check looks for new MPC-Kelpie releases in this repository
   instead of MPC-HC releases and runs every 30 days by default instead of
   every 7 days (2026-10-03).
+- The remaining program texts, including the translations, the language
+  files, the internal filter names, the web interface and the suggested
+  names of exported settings files, use the name MPC-Kelpie, and the file
+  properties show MPC-Kelpie as the publisher (2026-10-03).

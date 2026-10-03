@@ -795,7 +795,7 @@ msgstr "Aj&utor"
 
 msgctxt "ID_HELP_HOMEPAGE"
 msgid "&Home Page"
-msgstr "&Pagina de pornire pentru MPC-HC"
+msgstr "&Pagina de pornire pentru MPC-Kelpie"
 
 msgctxt "ID_HELP_CHECKFORUPDATE"
 msgid "Check for &updates"

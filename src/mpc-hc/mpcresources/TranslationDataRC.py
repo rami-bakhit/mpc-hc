@@ -43,10 +43,10 @@ BEGIN
             VALUE "CompanyName",      MPC_COMP_NAME_STR
             VALUE "FileDescription",  "%s"
             VALUE "FileVersion",      MPC_VERSION_STR
-            VALUE "InternalName",     "mpc-hc"
+            VALUE "InternalName",     "mpc-kelpie"
             VALUE "LegalCopyright",   MPC_COPYRIGHT_STR
             VALUE "OriginalFilename", "mpcresources.%s.dll"
-            VALUE "ProductName",      "MPC-HC"
+            VALUE "ProductName",      "MPC-Kelpie"
             VALUE "ProductVersion",   MPC_VERSION_STR
         END
     END

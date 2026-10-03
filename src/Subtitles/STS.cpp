@@ -3513,7 +3513,7 @@ bool CSimpleTextSubtitle::SaveAs(CString fn, Subtitle::SubType type,
         CString str;
 
         str  = _T("[Script Info]\n");
-        str += _T("; Note: This file was saved by MPC-HC.\n");
+        str += _T("; Note: This file was saved by MPC-Kelpie.\n");
         str += (type == Subtitle::SSA) ? _T("ScriptType: v4.00\n") : _T("ScriptType: v4.00+\n");
         str += (m_collisions == 0) ? _T("Collisions: Normal\n") : _T("Collisions: Reverse\n");
         if (type == Subtitle::ASS && m_scaledBAS >= 0) {

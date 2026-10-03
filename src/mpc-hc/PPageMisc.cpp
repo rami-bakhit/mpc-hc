@@ -139,7 +139,7 @@ void CPPageMisc::OnExportSettings()
     // In INI mode the settings live in two files (settings + MediaHistory), so
     // they are exported together as a .zip; in registry mode a single .reg.
     CString ext = AfxGetMyApp()->IsIniValid() ? _T("zip") : _T("reg");
-    CFileDialog fileSaveDialog(FALSE, ext, _T("mpc-hc-settings.") + ext);
+    CFileDialog fileSaveDialog(FALSE, ext, _T("mpc-kelpie-settings.") + ext);
 
     if (fileSaveDialog.DoModal() == IDOK) {
         if (AfxGetMyApp()->ExportSettings(fileSaveDialog.GetPathName())) {
@@ -162,12 +162,12 @@ void CPPageMisc::OnExportKeys()
         }
     }
 
-    CFileDialog fileDialogKeys(FALSE, _T("reg"), _T("mpc-hc-keys.reg"));
+    CFileDialog fileDialogKeys(FALSE, _T("reg"), _T("mpc-kelpie-keys.reg"));
     if (fileDialogKeys.DoModal() == IDOK) {
         if (AfxGetMyApp()->ExportSettings(fileDialogKeys.GetPathName(), _T("Commands2"))) {
             // also export mouse settings from registry
             if (!AfxGetMyApp()->IsIniValid()) {
-                CFileDialog fileDialogMouse(FALSE, _T("reg"), _T("mpc-hc-mouse.reg"));
+                CFileDialog fileDialogMouse(FALSE, _T("reg"), _T("mpc-kelpie-mouse.reg"));
                 if (fileDialogMouse.DoModal() == IDOK) {
                     AfxGetMyApp()->ExportSettings(fileDialogMouse.GetPathName(), _T("Mouse"));
                 }

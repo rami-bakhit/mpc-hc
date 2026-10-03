@@ -25,7 +25,7 @@
 #include "AsyncReader/asyncio.h"
 #include "AsyncReader/asyncrdr.h"
 
-#define CCDXAReaderName L"MPC-HC CDXA Reader"
+#define CCDXAReaderName L"MPC-Kelpie CDXA Reader"
 
 class CCDXAStream : public CAsyncStream
 {

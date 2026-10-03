@@ -24,7 +24,7 @@
 #include <atlbase.h>
 #include "../../../DSUtil/DSUtil.h"
 
-#define StreamDriveThruName L"MPC-HC StreamDriveThru"
+#define StreamDriveThruName L"MPC-Kelpie StreamDriveThru"
 
 class CStreamDriveThruInputPin : public CBasePin
 {

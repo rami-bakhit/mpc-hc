@@ -813,4 +813,4 @@ msgstr "기부(&D)"
 
 msgctxt "ID_HELP_ABOUT"
 msgid "&About..."
-msgstr "MPC-HC 정보(&A)..."
+msgstr "MPC-Kelpie 정보(&A)..."

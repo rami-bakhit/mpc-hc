@@ -29,7 +29,7 @@
 #include "AsyncReader/asyncio.h"
 #include "AsyncReader/asyncrdr.h"
 
-#define CCDDAReaderName L"MPC-HC CDDA Reader"
+#define CCDDAReaderName L"MPC-Kelpie CDDA Reader"
 
 struct ChunkHeader {
     UINT chunkID;

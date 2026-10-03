@@ -714,7 +714,7 @@ void CMPlayerCApp::ReportCmdLineError(LPCTSTR msg)
     }
 
     CStringW line;
-    line.Format(L"MPC-HC: %s\r\n", msg);
+    line.Format(L"MPC-Kelpie: %s\r\n", msg);
 
     DWORD dwMode, dwWritten;
     if (::GetConsoleMode(hStdErr, &dwMode)) {
