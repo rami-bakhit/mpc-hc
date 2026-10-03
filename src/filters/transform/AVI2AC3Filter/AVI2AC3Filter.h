@@ -21,7 +21,7 @@
 
 #pragma once
 
-#define AVI2AC3FilterName L"MPC-HC AVI<->AC3/DTS"
+#define AVI2AC3FilterName L"MPC-Kelpie AVI<->AC3/DTS"
 
 /*  AC3 audio
 

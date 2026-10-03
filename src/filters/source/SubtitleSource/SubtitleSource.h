@@ -24,7 +24,7 @@
 #include <atlbase.h>
 #include "../../../Subtitles/RTS.h"
 
-#define SubtitleSourceName   L"MPC-HC Subtitle Source"
+#define SubtitleSourceName   L"MPC-Kelpie Subtitle Source"
 
 class CSubtitleSource
     : public CSource

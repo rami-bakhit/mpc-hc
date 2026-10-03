@@ -256,7 +256,7 @@ void srt_header(char (&outBuffer)[1024], const STSStyle& style, OpenTypeLang::Hi
     }
 
     _snprintf_s(outBuffer, _TRUNCATE, "[Script Info]\n"
-        "Title: MPC-HC generated file\n"
+        "Title: MPC-Kelpie generated file\n"
         "ScriptType: v4.00+\n"
         "WrapStyle: 0\n"
         "ScaledBorderAndShadow: %s\n"

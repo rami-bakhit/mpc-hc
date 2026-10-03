@@ -28,7 +28,7 @@
 #include "ITrackInfo.h"
 #include "../../../DSUtil/DSMPropertyBag.h"
 
-#define VTSReaderName L"MPC-HC VTS Reader"
+#define VTSReaderName L"MPC-Kelpie VTS Reader"
 
 class CVobFile;
 
