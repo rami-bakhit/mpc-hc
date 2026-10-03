@@ -10,12 +10,11 @@ the date the change was first made.
 ## [Unreleased]
 
 Based on [clsid2/mpc-hc](https://github.com/clsid2/mpc-hc) `develop` at
-`5872362ce` (2026-09-21).
+`d3c043624` (2026-10-01).
 
 ### Added
 
-- Color Controls toolbar button with its own icon in all five toolbar sizes
-  (2026-08-16).
+- Color Controls toolbar button with its own icon (2026-08-16).
 - `MouseDragPanVideo` option to pan the video vertically with the left mouse
   button in fullscreen (2026-08-24).
 - `MouseDragSubtitles` option to move the subtitles vertically with the left
@@ -46,13 +45,9 @@ New options are located in Options > Advanced and are disabled by default.
   remembered window size, the player starts with a 960x540 video area, the
   size of the logo (2026-10-02).
 - The window title shows "MPC-Kelpie" instead of "Media Player Classic Home
-  Cinema" when no file is open. File associations registered by the player
-  use the same name as the application name (2026-10-02).
-- The executable is renamed to `mpc-kelpie64.exe` (`mpc-kelpie.exe` for
-  32-bit builds). In portable mode the settings files follow the new name,
-  so `mpc-hc64.ini` and `mpc-hc64.history.ini` have to be renamed to
-  `mpc-kelpie64.ini` and `mpc-kelpie64.history.ini`. File associations made
-  with the old executable have to be registered again (2026-10-02).
+  Cinema" when no file is open (2026-10-02).
+- The executable is renamed to `mpc-kelpie64.exe`, or `mpc-kelpie.exe` for
+  32-bit builds (2026-10-02).
 - MPC-Kelpie uses its own settings registry key, AppData folder, window class
   and file association names, so it no longer shares them with MPC-HC.
   Settings are not imported from MPC-HC (2026-10-03).
