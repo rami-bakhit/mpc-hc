@@ -86,7 +86,7 @@ Update_Status UpdateChecker::IsUpdateAvailable(const Version& currentVersion, bo
             osVersionStr += _T(" x64");
         }
 
-        CString headersFmt = _T("User-Agent: MPC-HC");
+        CString headersFmt = _T("User-Agent: MPC-Kelpie");
         if (VersionInfo::Is64Bit()) {
             headersFmt += _T(" (64-bit)");
         }

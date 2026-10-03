@@ -228,7 +228,7 @@ CAppSettings::CAppSettings()
     , iHue(0)
     , iSaturation(0)
     , nUpdaterAutoCheck(-1)
-    , nUpdaterDelay(7)
+    , nUpdaterDelay(30)
     , eCaptionMenuMode(MODE_SHOWCAPTIONMENU)
     , fHideNavigation(false)
     , bHideCaptureSettings(false)
@@ -2306,7 +2306,7 @@ void CAppSettings::LoadSettings()
     bTimerShowPercentage = !!pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_TIMER_SHOW_PERCENTAGE, FALSE);
 
     nUpdaterAutoCheck = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_UPDATER_AUTO_CHECK, AUTOUPDATE_UNKNOWN);
-    nUpdaterDelay = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_UPDATER_DELAY, 7);
+    nUpdaterDelay = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_UPDATER_DELAY, 30);
     if (nUpdaterDelay < 1) {
         nUpdaterDelay = 1;
     }

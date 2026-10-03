@@ -60,7 +60,7 @@ IF %ERRORLEVEL% NEQ 0 (
 REM The abbreviated hash of the current changeset and the number of changesets
 REM since the last (annotated) tag, which is what "git describe --long" reports
 FOR /F "usebackq delims=" %%A IN (`git rev-parse --short HEAD`) DO SET "HASH=%%A"
-FOR /F "usebackq delims=" %%A IN (`git describe --abbrev^=0 2^>NUL`) DO SET "TAG=%%A"
+FOR /F "usebackq delims=" %%A IN (`git describe --abbrev^=0 --match "[0-9]*" 2^>NUL`) DO SET "TAG=%%A"
 IF DEFINED TAG FOR /F "usebackq delims=" %%A IN (`git rev-list --count %TAG%..HEAD`) DO SET "VER=%%A"
 IF NOT DEFINED HASH SET "HASH=0000000"
 IF NOT DEFINED VER SET "VER=0"
