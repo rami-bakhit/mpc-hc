@@ -259,7 +259,7 @@ LONG WINAPI UnhandledException(LPEXCEPTION_POINTERS exceptionInfo)
     }
     offset = uintptr_t(exceptionInfo->ExceptionRecord->ExceptionAddress) - moduleBase;
 
-    CString errmsg = L"An error has occurred. MPC-HC will close now.\n\n";
+    CString errmsg = L"An error has occurred. MPC-Kelpie will close now.\n\n";
     errmsg.AppendFormat(L"Exception:\n%s\n\nCrashing module:\n%s\nOffset: 0x%" PRIXPTR, GetExceptionName(exceptionInfo->ExceptionRecord->ExceptionCode), moduleName.GetString(), offset);
 
     if (exceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
@@ -313,7 +313,7 @@ LONG WINAPI UnhandledException(LPEXCEPTION_POINTERS exceptionInfo)
     } else if (moduleName.Find(_T("vboxdispd3d.dll")) >= 0) {
         comment = _T("This crash was caused by a fault in VirtualBox display driver.");
     } else if (moduleName.Find(_T("explorerframe")) >= 0) {
-        comment = _T("This crash was caused by a fault in a Windows Explorer DLL.\nDo this to avoid the problem:\nMPC-HC options > Player > User Interface > uncheck \"Use enhanced taskbar features\"");
+        comment = _T("This crash was caused by a fault in a Windows Explorer DLL.\nDo this to avoid the problem:\nMPC-Kelpie options > Player > User Interface > uncheck \"Use enhanced taskbar features\"");
         use_wer = true;
     } else if (moduleName.Find(_T("kernelbase.dll")) >= 0 && trace.Find(_T("vapoursynth_filter")) >= 0) {
         comment = _T("This crash is likely caused by missing VapourSynth runtime or missing C++ runtime installation.\nYou can also fix it by removing this external filter in the options.");

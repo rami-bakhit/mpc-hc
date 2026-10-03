@@ -31,7 +31,7 @@
 #endif
 #endif
 
-#define WEBSITE_URL  _T("https://github.com/clsid2/mpc-hc/releases")
+#define WEBSITE_URL  _T("https://github.com/rami-bakhit/mpc-hc")
 #define DOWNLOAD_URL _T("https://github.com/clsid2/mpc-hc/releases")
 #define UPDATE_URL   _T("https://github.com/clsid2/mpc-hc/raw/develop/version.txt")
 #define BACKUP_UPDATE_URL   _T("https://cdn.jsdelivr.net/gh/clsid2/mpc-hc@develop/version.txt")

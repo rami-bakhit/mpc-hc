@@ -1078,7 +1078,7 @@ void CProfile::Flush(bool bForce)
 
     // Build the whole file in memory first: a UTF-8 BOM, then CRLF terminated
     // lines, byte for byte what the old text-mode "w, ccs=UTF-8" write produced.
-    CStringW text(L"; MPC-HC\r\n");
+    CStringW text(L"; MPC-Kelpie\r\n");
     CStringW line;
     for (auto it1 = m_ProfileMap.begin(); it1 != m_ProfileMap.end(); ++it1) {
         line.Format(L"[%s]\r\n", it1->first.GetString());

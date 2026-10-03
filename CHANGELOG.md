@@ -51,3 +51,6 @@ New options are located in Options > Advanced and are disabled by default.
 - MPC-Kelpie uses its own settings registry key, AppData folder, window class
   and file association names, so it no longer shares them with MPC-HC.
   Settings are not imported from MPC-HC (2026-10-03).
+- The About dialog, the file properties and the player's messages show the
+  name MPC-Kelpie, and the About dialog links to this repository and notes
+  that MPC-Kelpie is a modified version of MPC-HC (2026-10-03).

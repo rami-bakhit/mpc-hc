@@ -135,7 +135,7 @@ bool CYoutubeDLInstance::Run(CString url)
         if (!s.sYDLExePath.IsEmpty()) {
             AfxMessageBox(errmsg + L"\n\nYour YDLExepath value in advanced settings might be incorrect.", MB_ICONERROR, 0);
         } else if (url.Find(L"youtube.com") > 0) {
-            AfxMessageBox(errmsg + L"\n\nTo watch Youtube videos with MPC-HC you need to put \"yt-dlp.exe\" in the MPC-HC installation folder.\n\nhttps://github.com/yt-dlp/yt-dlp/releases", MB_ICONERROR, 0);
+            AfxMessageBox(errmsg + L"\n\nTo watch Youtube videos with MPC-Kelpie you need to put \"yt-dlp.exe\" in the MPC-Kelpie installation folder.\n\nhttps://github.com/yt-dlp/yt-dlp/releases", MB_ICONERROR, 0);
         }
         return false;
     }
