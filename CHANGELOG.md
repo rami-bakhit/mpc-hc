@@ -61,3 +61,5 @@ New options are located in Options > Advanced and are disabled by default.
   files, the internal filter names, the web interface and the suggested
   names of exported settings files, use the name MPC-Kelpie, and the file
   properties show MPC-Kelpie as the publisher (2026-10-03).
+- The file type icons that File Explorer shows for files associated with
+  MPC-Kelpie are replaced with MPC-Kelpie icons (2026-10-04).
