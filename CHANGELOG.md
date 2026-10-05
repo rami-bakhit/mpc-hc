@@ -63,3 +63,9 @@ New options are located in Options > Advanced and are disabled by default.
   properties show MPC-Kelpie as the publisher (2026-10-03).
 - The file type icons that File Explorer shows for files associated with
   MPC-Kelpie are replaced with MPC-Kelpie icons (2026-10-04).
+- The installer installs MPC-Kelpie under its own name and folder, next to
+  MPC-HC if it is installed, and the uninstaller removes the file
+  associations and leaves the settings of MPC-HC and MPC Video Renderer
+  untouched (2026-10-05).
+- The installer has a dark MPC-Kelpie design and shows a welcome page
+  (2026-10-05).

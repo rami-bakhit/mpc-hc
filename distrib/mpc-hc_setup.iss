@@ -51,7 +51,7 @@
 #include "..\include\version.h"
 
 #define copyright_str   str(MPC_COPYRIGHT_STR)
-#define app_name        "MPC-HC"
+#define app_name        "MPC-Kelpie"
 
 #if MPC_NIGHTLY_RELEASE
   #define app_ver       str(MPC_VERSION_MAJOR) + "." + str(MPC_VERSION_MINOR) + "." + str(MPC_VERSION_PATCH) + "." + str(MPC_VERSION_REV)
@@ -100,15 +100,7 @@
   #endif
 #endif
 
-#if MPC_NIGHTLY_RELEASE
-  #define FullAppNameVer = app_vername + " " + "(" + str(MPCHC_HASH) + ")"
-#else
-  #define FullAppNameVer = app_vername
-#endif
-
-#if MPC_NIGHTLY_RELEASE
-  #define FullAppNameVer = FullAppNameVer + " " + str(MPC_VERSION_NIGHTLY)
-#endif
+#define FullAppNameVer = app_vername
 #ifdef MPCHC_LITE
   #define FullAppNameVer = FullAppNameVer + " " + "Lite"
 #endif
@@ -135,19 +127,19 @@
 
 [Setup]
 #ifdef x64Build
-AppId                     = {{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}
+AppId                     = {{E093B0D9-EBD0-4D1B-96DF-4CDB164873B9}
 DefaultGroupName          = {#app_name} x64
 ArchitecturesAllowed      = x64compatible
 ArchitecturesInstallIn64BitMode = x64compatible
 #else
-AppId                     = {{2624B969-7135-4EB1-B0F6-2D8C397B45F7}
+AppId                     = {{5F84864C-0A89-430D-A8C2-0FA7055DF209}
 DefaultGroupName          = {#app_name}
 #endif
 
 AppName                   = {#app_name}
 AppVersion                = {#app_ver}
 AppVerName                = {#app_vername}
-AppPublisher              = MPC-HC Team
+AppPublisher              = MPC-Kelpie
 AppPublisherURL           = {#WEBSITE_URL}
 AppCopyright              = {#copyright_str}
 VersionInfoVersion        = {#app_ver}
@@ -158,13 +150,18 @@ DefaultDirName            = {code:GetInstallFolder}
 LicenseFile               = ..\COPYING.txt
 OutputDir                 = .
 SetupIconFile             = ..\src\mpc-hc\res\icon.ico
-WizardImageFile           = WizardImageFile.bmp
-WizardSmallImageFile      = WizardSmallImageFile.bmp
+WizardImageFile           = kelpie-wizard-image-*.png
+WizardSmallImageFile      = kelpie-wizard-small-*.png
+WizardStyle               = modern dark includetitlebar hidebevels
+WizardBackColor           = #0c2e34
+WizardImageBackColor      = #0c2e34
+WizardSmallImageBackColor = none
 Compression               = lzma2/ultra
 InternalCompressLevel     = ultra
 SolidCompression          = yes
 AllowNoIcons              = yes
 ShowTasksTreeLines        = yes
+DisableWelcomePage        = no
 DisableDirPage            = auto
 DisableProgramGroupPage   = auto
 MinVersion                = 6.1
@@ -172,7 +169,7 @@ CloseApplications         = true
 #ifexist "..\signinfo.txt"
 SignTool                  = MySignTool
 #endif
-SetupMutex                = 'mpchc_setup_mutex'
+SetupMutex                = 'mpckelpie_setup_mutex'
 
 [Languages]
 Name: en;    MessagesFile: compiler:Default.isl
@@ -307,25 +304,6 @@ Type: files; Name: {app}\COPYING;                   Check: IsUpgrade()
 Type: filesandordirs; Name: {app}\CrashReporter;    Check: IsUpgrade()
 	#endif
 
-; old shortcuts
-#ifdef x64Build
-Type: files; Name: {group}\Media Player Classic - Home Cinema x64.lnk;                   Check: IsUpgrade()
-Type: files; Name: {commondesktop}\Media Player Classic - Home Cinema x64.lnk;           Check: IsUpgrade()
-Type: files; Name: {userdesktop}\Media Player Classic - Home Cinema x64.lnk;             Check: IsUpgrade()
-Type: files; Name: {#quick_launch}\Media Player Classic - Home Cinema x64.lnk;           Check: IsUpgrade()
-#else
-Type: files; Name: {group}\Media Player Classic - Home Cinema.lnk;                       Check: IsUpgrade()
-Type: files; Name: {commondesktop}\Media Player Classic - Home Cinema.lnk;               Check: IsUpgrade()
-Type: files; Name: {userdesktop}\Media Player Classic - Home Cinema.lnk;                 Check: IsUpgrade()
-Type: files; Name: {#quick_launch}\Media Player Classic - Home Cinema.lnk;               Check: IsUpgrade()
-#endif
-Type: files; Name: {group}\{cm:ProgramOnTheWeb,Media Player Classic - Home Cinema}.url;  Check: IsUpgrade()
-Type: files; Name: {group}\{cm:UninstallProgram,Media Player Classic - Home Cinema}.lnk; Check: IsUpgrade()
-
-Type: files; Name: {userdesktop}\Media Player Classic - Home Cinema.lnk;   Check: not IsTaskSelected('desktopicon\user')   and IsUpgrade()
-Type: files; Name: {commondesktop}\Media Player Classic - Home Cinema.lnk; Check: not IsTaskSelected('desktopicon\common') and IsUpgrade()
-Type: files; Name: {#quick_launch}\Media Player Classic - Home Cinema.lnk; Check: not IsTaskSelected('quicklaunchicon')    and IsUpgrade(); OnlyBelowVersion: 6.01
-
 ; Old ffmpeg dlls from LAV Filters
 Type: files; Name: {app}\{#lavfiltersdir}\avcodec-lav-62.dll;   Check: IsUpgrade()
 Type: files; Name: {app}\{#lavfiltersdir}\avcodec-lav-61.dll;   Check: IsUpgrade()
@@ -423,15 +401,13 @@ function GetInstallFolder(Default: String): String;
 var
   sInstallPath: String;
 begin
-  if not RegQueryStringValue(HKCU, 'SOFTWARE\Gabest\Media Player Classic', 'ExePath', sInstallPath)
-  or not RegQueryStringValue(HKCU, 'SOFTWARE\MPC-HC\MPC-HC', 'ExePath', sInstallPath) then begin
-    Result := ExpandConstant('{pf}\MPC-HC');
+  if not RegQueryStringValue(HKCU, 'SOFTWARE\MPC-Kelpie\MPC-Kelpie', 'ExePath', sInstallPath) then begin
+    Result := ExpandConstant('{pf}\MPC-Kelpie');
   end
   else begin
-    RegQueryStringValue(HKCU, 'SOFTWARE\MPC-HC\MPC-HC', 'ExePath', sInstallPath);
     Result := ExtractFileDir(sInstallPath);
     if (Result = '') or not DirExists(Result) then begin
-      Result := ExpandConstant('{pf}\MPC-HC');
+      Result := ExpandConstant('{pf}\MPC-Kelpie');
     end;
   end;
 end;
@@ -451,11 +427,10 @@ begin
 end;
 
 
-// Check if MPC-HC's settings exist
+// Check if MPC-Kelpie's settings exist
 function SettingsExist(): Boolean;
 begin
-  if RegKeyExists(HKEY_CURRENT_USER, 'Software\Gabest\Media Player Classic') or
-  RegKeyExists(HKEY_CURRENT_USER, 'Software\MPC-HC\MPC-HC') or
+  if RegKeyExists(HKEY_CURRENT_USER, 'Software\MPC-Kelpie\MPC-Kelpie') or
   FileExists(ExpandConstant('{app}\{#mpchc_ini}')) then
     Result := True
   else
@@ -471,7 +446,7 @@ begin
 end;
 
 
-procedure CleanUpSettingsAndFiles();
+procedure UnregisterFileAssociations();
 var
   ResultCode: Integer;
 begin
@@ -479,31 +454,18 @@ begin
     Exec(ExpandConstant('{app}\{#mpchc_exe}'), '/unregall', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   except
   end;
-  DeleteFile(ExpandConstant('{app}\{#mpchc_ini}'));
-  DelTree(ExpandConstant('{userappdata}\MPC-HC\ShaderCache'), True, True, True);  
-  DeleteFile(ExpandConstant('{userappdata}\MPC-HC\default.mpcpl'));
-  RemoveDir(ExpandConstant('{userappdata}\MPC-HC'));
-  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\MPC-HC\Filters');
-  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\MPC-HC\MPC-HC');
-  RegDeleteKeyIfEmpty(HKCU, 'Software\MPC-HC');
-
-  #if INCLUDE_MPCVR
-  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\MPC-BE Filters\MPC Video Renderer');
-  RegDeleteKeyIfEmpty(HKCU, 'Software\MPC-BE Filters');  
-  #endif
 end;
 
 
-procedure CleanUpOldSettingsAndFiles();
+procedure CleanUpSettingsAndFiles();
 begin
-  DeleteFile(ExpandConstant('{userappdata}\Media Player Classic\default.mpcpl'));
-  RemoveDir(ExpandConstant('{userappdata}\Media Player Classic'));
-  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\Gabest\Filters');
-  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\Gabest\Media Player Classic');
-  RegDeleteKeyIfEmpty(HKCU, 'Software\Gabest');
-  RegDeleteValue(HKLM, 'SOFTWARE\Gabest\Media Player Classic', 'ExePath')
-  RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\Gabest\Media Player Classic');
-  RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\Gabest');
+  DeleteFile(ExpandConstant('{app}\{#mpchc_ini}'));
+  DelTree(ExpandConstant('{userappdata}\MPC-Kelpie\ShaderCache'), True, True, True);
+  DeleteFile(ExpandConstant('{userappdata}\MPC-Kelpie\default.mpcpl'));
+  RemoveDir(ExpandConstant('{userappdata}\MPC-Kelpie'));
+  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\MPC-Kelpie\Filters');
+  RegDeleteKeyIncludingSubkeys(HKCU, 'Software\MPC-Kelpie\MPC-Kelpie');
+  RegDeleteKeyIfEmpty(HKCU, 'Software\MPC-Kelpie');
 end;
 
 
@@ -519,8 +481,9 @@ var
 begin
   if CurStep = ssPostInstall then begin
     if IsTaskSelected('reset_settings') then begin
+      UnregisterFileAssociations();
       CleanUpSettingsAndFiles();
-      RegWriteStringValue(HKCU, 'Software\MPC-HC\MPC-HC', 'ExePath', ExpandConstant('{app}\{#mpchc_exe}'));
+      RegWriteStringValue(HKCU, 'Software\MPC-Kelpie\MPC-Kelpie', 'ExePath', ExpandConstant('{app}\{#mpchc_exe}'));
     end;
 
     iLanguage := StrToInt(ExpandConstant('{cm:langid}'));
@@ -528,7 +491,7 @@ begin
       if FileExists(ExpandConstant('{app}\{#mpchc_ini}')) then
         SetIniInt('Settings', 'InterfaceLanguage', iLanguage, ExpandConstant('{app}\{#mpchc_ini}'))
       else
-        RegWriteDWordValue(HKCU, 'Software\MPC-HC\MPC-HC\Settings', 'InterfaceLanguage', iLanguage);
+        RegWriteDWordValue(HKCU, 'Software\MPC-Kelpie\MPC-Kelpie\Settings', 'InterfaceLanguage', iLanguage);
     end;
   end;
 
@@ -537,16 +500,19 @@ end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
-  // When uninstalling, ask the user to delete MPC-HC settings
+  // Always remove the file associations, they point to the files being removed
+  if CurUninstallStep = usUninstall then
+    UnregisterFileAssociations();
+
+  // When uninstalling, ask the user to delete MPC-Kelpie settings
   if (CurUninstallStep = usUninstall) and SettingsExist() then begin
     if SuppressibleMsgBox(CustomMessage('msg_DeleteSettings'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
       CleanUpSettingsAndFiles();
-      CleanUpOldSettingsAndFiles();
     end;
 
-    RegDeleteValue(HKLM, 'SOFTWARE\MPC-HC\MPC-HC', 'ExePath')
-    RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\MPC-HC\MPC-HC');
-    RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\MPC-HC');
+    RegDeleteValue(HKLM, 'SOFTWARE\MPC-Kelpie\MPC-Kelpie', 'ExePath')
+    RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\MPC-Kelpie\MPC-Kelpie');
+    RegDeleteKeyIfEmpty(HKLM, 'SOFTWARE\MPC-Kelpie');
 
   end;
 end;
