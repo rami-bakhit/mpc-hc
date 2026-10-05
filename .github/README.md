@@ -56,11 +56,24 @@ MPC-Kelpie is not affiliated with or endorsed by the MPC-HC project.
 
 ## Download
 
-No binary releases have been published yet. Releases will be available on the
-[Releases](https://github.com/rami-bakhit/mpc-hc/releases) page, together with
-SHA-256 checksums and a complete source archive.
+Download the [latest release](https://github.com/rami-bakhit/mpc-hc/releases/latest)
+from the Releases page. Each release contains:
 
-Builds are 64-bit (x64) only.
+- an installer, `MPC-Kelpie.<version>.x64.exe`
+- a portable zip, `MPC-Kelpie.<version>.x64.zip`
+- the complete source code of MPC-Kelpie, including all submodules, and of
+  the included MPC Video Renderer
+- `SHA256SUMS.txt` with the SHA-256 checksums of these files
+
+Builds are 64-bit (x64) only. The files are not digitally signed, so Windows
+SmartScreen may show a warning the first time the installer or the program
+is started.
+
+The release packages include MPC Video Renderer built from
+[rami-bakhit/MPCVideoRenderer](https://github.com/rami-bakhit/MPCVideoRenderer).
+It is the renderer used in MPC-HC releases with one change: hue and saturation
+in Color Controls also apply to Dolby Vision video. The release notes state
+the renderer commit each release is built from.
 
 ## Running alongside MPC-HC
 
