@@ -20,8 +20,8 @@
 ; Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 
 
-#if VER < EncodeVer(6,3,2)
-  #error Update your Inno Setup version (6.3.2 or newer)
+#if VER < EncodeVer(6,7,0)
+  #error Update your Inno Setup version (6.7.0 or newer)
 #endif
 
 #ifndef UNICODE
