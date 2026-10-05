@@ -9,8 +9,10 @@ the date the change was first made.
 
 ## [Unreleased]
 
+## [kelpie-2.8.2-1] - 2026-10-05
+
 Based on [clsid2/mpc-hc](https://github.com/clsid2/mpc-hc) `develop` at
-`d3c043624` (2026-10-01).
+`ce093e362` (2026-10-04).
 
 ### Added
 
@@ -69,3 +71,9 @@ New options are located in Options > Advanced and are disabled by default.
   untouched (2026-10-05).
 - The installer has a dark MPC-Kelpie design and shows a welcome page
   (2026-10-05).
+- The release packages include MPC Video Renderer built from
+  [rami-bakhit/MPCVideoRenderer](https://github.com/rami-bakhit/MPCVideoRenderer),
+  which also applies hue and saturation to Dolby Vision video (2026-09-26).
+
+[Unreleased]: https://github.com/rami-bakhit/mpc-hc/compare/kelpie-2.8.2-1...HEAD
+[kelpie-2.8.2-1]: https://github.com/rami-bakhit/mpc-hc/releases/tag/kelpie-2.8.2-1
