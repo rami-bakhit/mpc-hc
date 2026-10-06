@@ -159,7 +159,7 @@ void CPPageAdvanced::InitSettings()
     if (IsWindowsVersionOrGreaterBuild(10, 0, 22000)) { //native menus are windows 11 only
         addBoolItem(WIN11_NATIVE_MENUS, IDS_RS_WIN11_NATIVE_MENUS, false, s.bWin11NativeMenus, StrRes(IDS_PPAGEADVANCED_WIN11_NATIVE_MENUS));
     }
-    addComboItem(MODERN_THEME_STYLE, IDS_RS_MODERNTHEMESTYLE, static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT), s.iModernThemeStyle,
+    addComboItem(MODERN_THEME_STYLE, IDS_RS_MODERNTHEMESTYLE, static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE), s.iModernThemeStyle,
         { StrRes(IDS_MODERN_THEME_STYLE_FOLLOW_OS), StrRes(IDS_MODERN_THEME_STYLE_WINDOWS10), StrRes(IDS_MODERN_THEME_STYLE_WINDOWS11), StrRes(IDS_MODERN_THEME_STYLE_KELPIE) },
         StrRes(IDS_PPAGEADVANCED_MODERN_THEME_STYLE));
     addIntItem(MOUSE_LEFTUP_DELAY, IDS_RS_MOUSE_LEFTUP_DELAY, 0, s.iMouseLeftUpDelay, std::make_pair(0, 1000), StrRes(IDS_PPAGEADVANCED_MOUSE_LEFTUP_DELAY));
