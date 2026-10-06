@@ -9,6 +9,11 @@ the date the change was first made.
 
 ## [Unreleased]
 
+## [kelpie-2.8.2-2] - 2026-10-06
+
+Based on [clsid2/mpc-hc](https://github.com/clsid2/mpc-hc) `develop` at
+`ff9ba1de9` (2026-10-06).
+
 ### Added
 
 - MPC-Kelpie theme style for the modern theme, with dark and light colours,
@@ -88,5 +93,6 @@ New options are located in Options > Advanced and are disabled by default.
   [rami-bakhit/MPCVideoRenderer](https://github.com/rami-bakhit/MPCVideoRenderer),
   which also applies hue and saturation to Dolby Vision video (2026-09-26).
 
-[Unreleased]: https://github.com/rami-bakhit/mpc-hc/compare/kelpie-2.8.2-1...HEAD
+[Unreleased]: https://github.com/rami-bakhit/mpc-hc/compare/kelpie-2.8.2-2...HEAD
+[kelpie-2.8.2-2]: https://github.com/rami-bakhit/mpc-hc/compare/kelpie-2.8.2-1...kelpie-2.8.2-2
 [kelpie-2.8.2-1]: https://github.com/rami-bakhit/mpc-hc/releases/tag/kelpie-2.8.2-1
