@@ -1253,6 +1253,7 @@ void CMPCThemeUtil::fulfillThemeReqs(CProgressCtrl* ctl)
 
 void CMPCThemeUtil::enableWindows10DarkFrame(CWnd* window)
 {
+    CMPCTheme::ApplyKelpieFrameColors(window->GetSafeHwnd()); //MPC-Kelpie: title bar and border colours
     if (canUseWin10DarkTheme()) {
         HMODULE hUser = GetModuleHandleA("user32.dll");
         if (hUser) {
@@ -1272,6 +1273,7 @@ void CMPCThemeUtil::enableWindows10DarkFrame(CWnd* window)
 //unlike enableWindows10DarkFrame, this also turns the dark frame off, for windows that outlive a theme change
 void CMPCThemeUtil::refreshWindows10DarkFrame(HWND hWnd)
 {
+    CMPCTheme::ApplyKelpieFrameColors(hWnd); //MPC-Kelpie: title bar and border colours
     RTL_OSVERSIONINFOW osvi = GetRealOSVersion();
     if (osvi.dwMajorVersion < 10 || osvi.dwBuildNumber < 17763) {
         return;

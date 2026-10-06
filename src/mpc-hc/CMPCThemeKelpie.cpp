@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "CMPCTheme.h"
+#include "mplayerc.h"
+#include <VersionHelpersInternal.h>
+#include <dwmapi.h>
 
 //MPC-Kelpie: the MPC-Kelpie theme style. It is drawn by the Windows 11 style code (isWindows11Style) with its own
 //palette: sea tinted surfaces with warm white text in dark mode, misty surfaces with sea navy text in light mode,
@@ -391,4 +394,21 @@ void CMPCTheme::InitializeKelpieColors() {
     ApplyAccentColors();
 }
 
-
+//the title bar, its text and the window border are drawn by windows; from windows 11 (build 22000) dwm takes their
+//colours from the window, so in the Kelpie style every window gets the Kelpie ones, and in any other the system's back.
+//called where upstream sets the dark frame: when a window is created and when the theme changes
+void CMPCTheme::ApplyKelpieFrameColors(HWND hWnd) {
+    if (!hWnd || !IsWindowsVersionOrGreaterBuild(10, 0, 22000)) {
+        return;
+    }
+    //DWMWA_BORDER_COLOR, DWMWA_CAPTION_COLOR, DWMWA_TEXT_COLOR and DWMWA_COLOR_DEFAULT, for sdks that predate them
+    constexpr DWORD dwmBorderColor = 34, dwmCaptionColor = 35, dwmTextColor = 36;
+    constexpr COLORREF dwmColorDefault = 0xFFFFFFFF;
+    const bool kelpie = AppIsThemeLoaded() && EffectiveThemeStyle() == ModernThemeStyle::KELPIE;
+    const COLORREF caption = kelpie ? W10DarkThemeTitlebarBGColor : dwmColorDefault; //the menu bar has the same colour
+    const COLORREF text = kelpie ? W10DarkThemeTitlebarFGColor : dwmColorDefault;
+    const COLORREF border = kelpie ? W10DarkThemeWindowBorderColor : dwmColorDefault;
+    DwmSetWindowAttribute(hWnd, dwmCaptionColor, &caption, sizeof(caption));
+    DwmSetWindowAttribute(hWnd, dwmTextColor, &text, sizeof(text));
+    DwmSetWindowAttribute(hWnd, dwmBorderColor, &border, sizeof(border));
+}

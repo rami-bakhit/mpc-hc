@@ -234,6 +234,7 @@ public:
     static void InitializeWindows11Colors();
     static void InitializeKelpieColors();
     static void SetKelpieAccentColors();
+    static void ApplyKelpieFrameColors(HWND hWnd);
     static void ReadAccentColors();
     static void ApplyAccentColors();
     static COLORREF EnsureContrast(COLORREF fg, COLORREF bg, double minRatio);
