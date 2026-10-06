@@ -12,7 +12,8 @@ public:
     enum class ModernThemeStyle {
         WINDOWSDEFAULT, //follow the windows version
         WINDOWS10,
-        WINDOWS11
+        WINDOWS11,
+        KELPIE //MPC-Kelpie palette, drawn by the Windows 11 style code
     };
 
     static COLORREF MenuBGColor;
@@ -231,6 +232,8 @@ public:
     static void InitializeColors();
     static void InitializeWindows10Colors();
     static void InitializeWindows11Colors();
+    static void InitializeKelpieColors();
+    static void SetKelpieAccentColors();
     static void ReadAccentColors();
     static void ApplyAccentColors();
     static COLORREF EnsureContrast(COLORREF fg, COLORREF bg, double minRatio);

@@ -1971,7 +1971,7 @@ void CAppSettings::LoadSettings()
 
     eModernThemeMode = static_cast<CMPCTheme::ModernThemeMode>(pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MODERNTHEMEMODE, static_cast<int>(CMPCTheme::ModernThemeMode::WINDOWSDEFAULT)));
     iModernThemeStyle = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MODERNTHEMESTYLE, static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT));
-    if (iModernThemeStyle < static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT) || iModernThemeStyle > static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWS11)) {
+    if (iModernThemeStyle < static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT) || iModernThemeStyle > static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE)) {
         iModernThemeStyle = static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT);
     }
 
