@@ -18,7 +18,8 @@ in this repository, not to the MPC-HC project.
 ## Features
 
 All options added by MPC-Kelpie are disabled by default. With these options
-disabled, the player behaves the same as the upstream version it is based on.
+disabled, the player behaves the same as the upstream version it is based on,
+except for the default theme.
 
 - Color Controls button for the toolbar (Options > Player > Toolbar Layout).
   It has its own icon and does not use one of the four custom button slots.
@@ -26,6 +27,10 @@ disabled, the player behaves the same as the upstream version it is based on.
   toolbar button. The button is also enabled when the open video has no
   subtitles.
 - The Options dialog opens at the position where it was last closed.
+- MPC-Kelpie theme style with dark and light colours and its own toolbar icons.
+  It is the default style and starts in dark mode. The Windows 10 and Windows 11
+  styles remain available in Options > Advanced (`ModernThemeStyle`), and the
+  light and Windows default modes in Options > Player > User Interface.
 
 The following options are available in Options > Advanced:
 
