@@ -9,6 +9,19 @@ the date the change was first made.
 
 ## [Unreleased]
 
+### Added
+
+- MPC-Kelpie theme style for the modern theme, with dark and light colours,
+  a fixed turquoise accent colour and its own toolbar icons. On Windows 11 the
+  title bars and borders of the player's windows use the same colours
+  (2026-10-06).
+
+### Changed
+
+- MPC-Kelpie is the default theme style (2026-10-06).
+- The modern theme uses dark mode by default instead of following the Windows
+  setting (2026-10-06).
+
 ## [kelpie-2.8.2-1] - 2026-10-05
 
 Based on [clsid2/mpc-hc](https://github.com/clsid2/mpc-hc) `develop` at

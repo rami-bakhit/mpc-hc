@@ -183,6 +183,7 @@ if not exist "$(OutDir)LAVFilters" if exist "$(SolutionDir)bin\mpc-hc_x86\LAVFil
     <ClCompile Include="CMPCThemeStatic.cpp" />
     <ClCompile Include="CMPCThemeStaticLink.cpp" />
     <ClCompile Include="CMPCTheme.cpp" />
+    <ClCompile Include="CMPCThemeKelpie.cpp" />
     <ClCompile Include="CMPCThemeToolTipCtrl.cpp" />
     <ClCompile Include="CMPCThemeTreeCtrl.cpp" />
     <ClCompile Include="ChildView.cpp" />

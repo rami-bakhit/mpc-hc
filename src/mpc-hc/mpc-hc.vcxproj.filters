@@ -470,6 +470,9 @@
     <ClCompile Include="CMPCTheme.cpp">
       <Filter>MPCTheme</Filter>
     </ClCompile>
+    <ClCompile Include="CMPCThemeKelpie.cpp">
+      <Filter>MPCTheme</Filter>
+    </ClCompile>
     <ClCompile Include="CMPCThemeButton.cpp">
       <Filter>MPCTheme</Filter>
     </ClCompile>

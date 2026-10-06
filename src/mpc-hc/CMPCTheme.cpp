@@ -597,12 +597,15 @@ CMPCTheme::ModernThemeStyle CMPCTheme::EffectiveThemeStyle() {
 }
 
 void CMPCTheme::InitializeColors() {
-    isWindows11Style = EffectiveThemeStyle() == ModernThemeStyle::WINDOWS11;
+    const ModernThemeStyle themeStyle = EffectiveThemeStyle();
+    isWindows11Style = themeStyle == ModernThemeStyle::WINDOWS11 || themeStyle == ModernThemeStyle::KELPIE; //the Kelpie style is drawn by the Windows 11 style code
     drawThemedControls = false; //the palettes that draw the controls set it back; a live switch can land on one that does not
     InfoBarBGColor = RGB(0, 0, 0);
     InfoBarTextColor = RGB(255, 255, 255);
     InfoBarBorderColor = RGB(0, 0, 0);
-    if (isWindows11Style) {
+    if (themeStyle == ModernThemeStyle::KELPIE) {
+        InitializeKelpieColors();
+    } else if (isWindows11Style) {
         InitializeWindows11Colors();
     } else {
         InitializeWindows10Colors();
@@ -1234,7 +1237,11 @@ static COLORREF VividAccent(const COLORREF* shades, int count, COLORREF bg, doub
 
 //the accent slots of the Windows 11 style; called again from CMainFrame::OnSettingChange when the accent changes
 void CMPCTheme::ApplyAccentColors() {
-    ReadAccentColors();
+    if (EffectiveThemeStyle() == ModernThemeStyle::KELPIE) {
+        SetKelpieAccentColors(); //the Kelpie style keeps its own accent instead of the Windows accent
+    } else {
+        ReadAccentColors();
+    }
     const COLORREF shades[] = { AccentDark3, AccentDark2, AccentDark1, Accent, AccentLight1, AccentLight2, AccentLight3 };
     const int count = _countof(shades);
     if (EffectiveThemeMode() == ModernThemeMode::DARK) {

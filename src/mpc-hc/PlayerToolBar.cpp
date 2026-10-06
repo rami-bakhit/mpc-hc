@@ -232,6 +232,11 @@ void CPlayerToolBar::MakeImageList(bool createCustomizeButtons, int buttonSize, 
         resourceID = IDF_SVG_BUTTONS64;
         svgscale = targetsize / 64.0f;
     }
+    //MPC-Kelpie: the MPC-Kelpie theme style has its own built-in icons, in the same layout as buttons*.svg
+    static_assert(IDF_SVG_BUTTONS64 - IDF_SVG_BUTTONS16 == 4 && IDF_SVG_KELPIE_BUTTONS64 - IDF_SVG_KELPIE_BUTTONS16 == 4, "toolbar icon resources must be consecutive");
+    if (AppIsThemeLoaded() && CMPCTheme::EffectiveThemeStyle() == CMPCTheme::ModernThemeStyle::KELPIE) {
+        resourceID = IDF_SVG_KELPIE_BUTTONS16 + (resourceID - IDF_SVG_BUTTONS16);
+    }
 
     CImage image;
 
