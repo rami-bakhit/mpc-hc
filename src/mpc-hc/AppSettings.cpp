@@ -195,7 +195,7 @@ CAppSettings::CAppSettings()
     , bWindows10DarkThemeActive(false)
     , bWindows10AccentColorsEnabled(false)
     , iModernSeekbarHeight(DEF_MODERN_SEEKBAR_HEIGHT)
-    , eModernThemeMode(CMPCTheme::ModernThemeMode::WINDOWSDEFAULT)
+    , eModernThemeMode(CMPCTheme::ModernThemeMode::DARK) //MPC-Kelpie: dark mode by default, whatever the windows setting
     , iModernThemeStyle(static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE)) //MPC-Kelpie: the Kelpie style by default
     , iFullscreenDelay(MIN_FULLSCREEN_DELAY)
     , iVerticalAlignVideo(verticalAlignVideoType::ALIGN_MIDDLE)
@@ -1969,7 +1969,7 @@ void CAppSettings::LoadSettings()
         iModernSeekbarHeight = DEF_MODERN_SEEKBAR_HEIGHT;
     }
 
-    eModernThemeMode = static_cast<CMPCTheme::ModernThemeMode>(pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MODERNTHEMEMODE, static_cast<int>(CMPCTheme::ModernThemeMode::WINDOWSDEFAULT)));
+    eModernThemeMode = static_cast<CMPCTheme::ModernThemeMode>(pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MODERNTHEMEMODE, static_cast<int>(CMPCTheme::ModernThemeMode::DARK)));
     iModernThemeStyle = pApp->GetProfileInt(IDS_R_SETTINGS, IDS_RS_MODERNTHEMESTYLE, static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE));
     if (iModernThemeStyle < static_cast<int>(CMPCTheme::ModernThemeStyle::WINDOWSDEFAULT) || iModernThemeStyle > static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE)) {
         iModernThemeStyle = static_cast<int>(CMPCTheme::ModernThemeStyle::KELPIE);
